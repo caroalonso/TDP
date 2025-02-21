@@ -1,0 +1,18 @@
+{Si los robots recolectores no conocen de antemano el tamaño de su cuadrante, el ejercicio debería modificarse de la siguiente manera:
+
+El fiscalizador asigna los tamaños:
+
+En lugar de definir los cuadrantes dentro de cada robot recolector, el fiscalizador debe calcular y enviar el tamaño 
+el cuadrante de cada robot antes de que comiencen su recorrido.
+Se podría usar un número aleatorio dentro de un rango razonable para determinar las dimensiones de cada cuadrante.
+Los robots recolectores deben recibir la información del fiscalizador:
+
+Antes de comenzar su recorrido, cada robot debe recibir un mensaje con el tamaño de su cuadrante (alto y ancho).
+Esto implica que los procesos de movimiento deben depender de estos valores recibidos en lugar de estar predefinidos en el código.
+Adaptación de los procesos de recolección:
+
+Como ahora el tamaño del cuadrante es dinámico, los robots deben usar las dimensiones recibidas para guiar su recorrido.
+La estructura de repetición que determina el movimiento (repetir N veces) debe depender de estas dimensiones variables.
+Sin cambios en la segunda fase:
+
+Luego de completar la recolección, los robots siguen informando al fiscalizador y moviéndose a la calle asignada como en la versión original.}

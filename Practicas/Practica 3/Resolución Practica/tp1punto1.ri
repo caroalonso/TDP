@@ -1,0 +1,69 @@
+programa tp1punto1
+procesos
+  proceso Juntar_Flores_Esquina(ES flores:numero ; ES esquina_vacia:numero)
+  comenzar
+    si(HayFlorEnLaEsquina)
+      mientras(HayFlorEnLaEsquina)
+        tomarFlor
+        flores:=flores+1
+    sino 
+      esquina_vacia:=esquina_vacia+1
+  fin
+
+  proceso Juntar_Flores(ES flores:numero; ES esquina_vacia:numero)
+  comenzar
+    repetir 99
+      Juntar_Flores_Esquina(flores,esquina_vacia)
+      mover
+    Juntar_Flores_Esquina(flores,esquina_vacia)
+  fin
+
+  proceso Depositar_Flores(E flores:numero)
+  comenzar
+    repetir flores
+      depositarFlor
+  fin
+
+  proceso RecorrerAvenida(E Avenida:numero)
+  variables
+    flores:numero
+    esquina_vacia: numero
+  comenzar
+    flores:=0
+    esquina_vacia:=0
+    Juntar_Flores(flores,esquina_vacia)
+    Depositar_Flores(flores)
+    Informar('FloresJuntadas',flores)
+    Informar('EsquinaVacia',esquina_vacia)
+  fin
+
+areas
+  ciudad: AreaP(1,1,1,100)
+  ciudad2: AreaP(3,1,3,100)
+  ciudad3: AreaP(5,1,5,100)
+robots
+  robot robot1
+  variables
+    Av:numero
+  comenzar
+    Av:=1
+    repetir 2
+      RecorrerAvenida(Av)
+      Av:=Av+2
+      si(Av <= 5)  {Validamos que Av no supere el límite de la avenida}
+        Pos(Av,1)
+      sino
+        Informar('PosiciónFueraDeLimite', Av)  {Si Av es mayor que 5, muestra un mensaje de error}
+        terminar
+    RecorrerAvenida(Av)   {Para completar el último recorrido}
+  fin
+
+variables
+  robot_uno: robot1
+comenzar
+  AsignarArea (robot_uno,ciudad)
+  AsignarArea (robot_uno,ciudad2)
+  AsignarArea (robot_uno,ciudad3)
+  Iniciar (robot_uno,1,1)
+fin
+

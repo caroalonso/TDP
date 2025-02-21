@@ -1,0 +1,130 @@
+programa tp2punto3b
+
+procesos
+  proceso recogerFlores (ES cantidadFlores: numero)
+  comenzar
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      cantidadFlores := cantidadFlores + 1
+  fin  
+
+  proceso recogerPapeles (ES cantidadPapeles: numero)
+  comenzar
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+      cantidadPapeles := cantidadPapeles + 1
+  fin  
+
+  proceso recorrerPapeles(ES cantidadPapeles: numero)
+  comenzar
+    repetir 9
+      si HayPapelEnLaEsquina
+        recogerPapeles(cantidadPapeles)
+      mover
+    si HayPapelEnLaEsquina
+      recogerPapeles(cantidadPapeles)
+  fin
+
+  proceso recorrerFlores(ES cantidadFlores: numero)
+  comenzar
+    repetir 9
+      si HayFlorEnLaEsquina
+        recogerFlores(cantidadFlores)
+      mover
+    si HayFlorEnLaEsquina
+      recogerFlores(cantidadFlores)
+  fin
+
+
+areas
+  zonaRecolectorPapeles1: AreaP(1,1,10,1)
+  zonaRecolectorPapeles2: AreaP(11,1,20,1)
+  zonaRecolectorPapeles3: AreaP(21,1,30,1)
+  zonaRecolectorPapeles4: AreaP(31,1,40,1)
+  zonaRecolectorFlores1: AreaP(1,5,10,5)
+  zonaRecolectorFlores2: AreaP(11,5,20,5)
+  zonaRecolectorFlores3: AreaP(21,5,30,5)
+  zonaRecolectorFlores4: AreaP(31,5,40,5)
+
+
+robots 
+  robot robotRecolectorPapeles1
+  variables
+    cantidadPapeles: numero
+  comenzar
+    cantidadPapeles := 0
+    derecha
+    recorrerPapeles(cantidadPapeles)
+    EnviarMensaje(cantidadPapeles, rp2)
+    Pos(21,1)
+    RecibirMensaje(cantidadPapeles, rp2)
+    recorrerPapeles(cantidadPapeles)
+    EnviarMensaje(cantidadPapeles, rp2)
+  fin
+  
+  robot robotRecolectorPapeles2
+  variables
+    cantidadPapeles: numero
+  comenzar
+    RecibirMensaje(cantidadPapeles, rp1)
+    derecha
+    recorrerPapeles(cantidadPapeles)
+    EnviarMensaje(cantidadPapeles, rp1)
+    Pos(31,1)
+    RecibirMensaje(cantidadPapeles, rp1)
+    recorrerPapeles(cantidadPapeles)
+    Informar('Total de papeles', cantidadPapeles)
+  fin
+
+  robot robotRecolectorFlores1
+  variables
+    cantidadFlores: numero
+  comenzar
+    cantidadFlores := 0
+    derecha
+    recorrerFlores(cantidadFlores)
+    EnviarMensaje(cantidadFlores, rf2)
+    Pos(21,5)
+    RecibirMensaje(cantidadFlores, rf2)
+    recorrerFlores(cantidadFlores)
+    EnviarMensaje(cantidadFlores, rf2)
+  fin
+  
+  robot robotRecolectorFlores2
+  variables
+    cantidadFlores: numero
+  comenzar
+    RecibirMensaje(cantidadFlores, rf1)
+    derecha
+    recorrerFlores(cantidadFlores)
+    EnviarMensaje(cantidadFlores, rf1)
+    Pos(31,5)
+    RecibirMensaje(cantidadFlores, rf1)
+    recorrerFlores(cantidadFlores)
+    Informar('Total de flores', cantidadFlores)
+  fin
+
+
+variables 
+  rp1: robotRecolectorPapeles1
+  rp2: robotRecolectorPapeles2
+  rf1: robotRecolectorFlores1
+  rf2: robotRecolectorFlores2
+comenzar 
+  AsignarArea(rp1, zonaRecolectorPapeles1)
+  AsignarArea(rp1, zonaRecolectorPapeles3)
+
+  AsignarArea(rp2, zonaRecolectorPapeles2)
+  AsignarArea(rp2, zonaRecolectorPapeles4)
+
+  AsignarArea(rf1, zonaRecolectorFlores1)
+  AsignarArea(rf1, zonaRecolectorFlores3)
+
+  AsignarArea(rf2, zonaRecolectorFlores2)
+  AsignarArea(rf2, zonaRecolectorFlores4)
+
+  Iniciar(rp1, 1, 1)
+  Iniciar(rp2, 11, 1)
+  Iniciar(rf1, 1, 5)
+  Iniciar(rf2, 11, 5)
+fin

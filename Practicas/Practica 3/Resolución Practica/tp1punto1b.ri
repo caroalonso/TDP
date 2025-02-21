@@ -1,0 +1,76 @@
+programa tp1punto1b
+
+procesos
+  {Proceso para juntar flores en cada esquina}
+  proceso Juntar_Flores_Esquina(ES flores:numero ; ES esquina_vacia:numero)
+  comenzar
+    // Si hay flores en la esquina, las recoge hasta que no haya más
+    si(HayFlorEnLaEsquina)
+      mientras(HayFlorEnLaEsquina)
+        tomarFlor    // El robot toma una flor
+        flores:=flores+1  // Se incrementa el contador de flores recolectadas
+    sino 
+      esquina_vacia:=esquina_vacia+1  // Si no hay flores, se cuenta la esquina vacía
+  fin
+
+
+  {Proceso para juntar flores a lo largo de toda la avenida}
+  proceso Juntar_Flores(ES flores:numero; ES esquina_vacia:numero)
+  comenzar
+    repetir 99   
+      Juntar_Flores_Esquina(flores,esquina_vacia)  
+      mover    
+    Juntar_Flores_Esquina(flores,esquina_vacia)  
+  fin
+
+
+ {Proceso para depositar las flores recolectadas}
+  proceso Depositar_Flores(E flores:numero)
+  comenzar
+    repetir flores    
+      depositarFlor
+  fin
+ 
+
+  {Proceso principal para recorrer toda la avenida}
+  proceso RecorrerAvenida
+  variables
+    flores:numero    
+    esquina_vacia: numero  
+  comenzar
+    flores:=0  
+    esquina_vacia:=0  
+    Juntar_Flores(flores,esquina_vacia)  
+    Depositar_Flores(flores)  
+    Informar('FloresJuntadas',flores)  
+    Informar('EsquinaVacia',esquina_vacia)  
+  fin
+
+areas
+  {Definición de las áreas o avenidas donde el robot se moverá}
+  ciudad: AreaP(1,1,1,100)  
+  ciudad2: AreaP(3,1,3,100)  
+  ciudad3: AreaP(5,1,5,100)  
+
+robots
+  
+  {Definición de los robots que realizarán la tarea}
+  robot robot1
+  comenzar
+    RecorrerAvenida {El robot comenzará el proceso de recorrer la avenida}
+  fin
+
+variables
+  robot_uno: robot1  
+  robot_dos: robot1  
+  robot_tres: robot1  
+comenzar
+  AsignarArea (robot_uno,ciudad)  // El robot 1 trabaja en la ciudad 1
+  AsignarArea (robot_dos,ciudad2)  // El robot 2 trabaja en la ciudad 2
+  AsignarArea (robot_tres,ciudad3)  // El robot 3 trabaja en la ciudad 3
+
+  Iniciar (robot_uno,1,1)  // El robot 1 comienza en la posición (1,1)
+  Iniciar (robot_dos,3,1)  // El robot 2 comienza en la posición (3,1)
+  Iniciar (robot_tres,5,1)  // El robot 3 comienza en la posición (5,1)
+fin
+

@@ -1,0 +1,102 @@
+programa tp2punto3a
+
+procesos
+  proceso recogerFlores (ES cantidadFlores: numero)
+  comenzar
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      cantidadFlores := cantidadFlores + 1
+  fin  
+
+  proceso recogerPapeles (ES cantidadPapeles: numero)
+  comenzar
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+      cantidadPapeles := cantidadPapeles + 1
+  fin  
+
+  proceso recorrerPapeles(ES cantidadPapeles: numero)
+  comenzar
+    repetir 9
+      si HayPapelEnLaEsquina
+        recogerPapeles(cantidadPapeles)
+      mover
+    si HayPapelEnLaEsquina
+      recogerPapeles(cantidadPapeles)
+  fin
+
+  proceso recorrerFlores(ES cantidadFlores: numero)
+  comenzar
+    repetir 9
+      si HayFlorEnLaEsquina
+        recogerFlores(cantidadFlores)
+      mover
+    si HayFlorEnLaEsquina
+      recogerFlores(cantidadFlores)
+  fin
+
+
+areas
+  areaA1: AreaP(1,1,10,1)
+  areaA2: AreaP(11,1,20,1)
+  areaB1: AreaP(1,5,10,5)
+  areaB2: AreaP(11,5,20,5)
+
+
+robots 
+  robot robotRecolectorPapeles1
+  variables
+    cantidadPapeles: numero
+  comenzar
+    cantidadPapeles := 0
+    derecha
+    recorrerPapeles(cantidadPapeles)
+    EnviarMensaje(cantidadPapeles, robotPapeles2)
+  fin
+  
+  robot robotRecolectorPapeles2
+  variables
+    cantidadPapeles: numero
+  comenzar
+    RecibirMensaje(cantidadPapeles, robotPapeles1)
+    derecha
+    recorrerPapeles(cantidadPapeles)
+    Informar('Total de papeles', cantidadPapeles)
+  fin
+
+  robot robotRecolectorFlores1
+  variables
+    cantidadFlores: numero
+  comenzar
+    cantidadFlores := 0
+    derecha
+    recorrerFlores(cantidadFlores)
+    EnviarMensaje(cantidadFlores, robotFlores2)
+  fin
+  
+  robot robotRecolectorFlores2
+  variables
+    cantidadFlores: numero
+  comenzar
+    RecibirMensaje(cantidadFlores, robotFlores1)
+    derecha
+    recorrerFlores(cantidadFlores)
+    Informar('Total de flores', cantidadFlores)
+  fin
+
+variables 
+  robotPapeles1: robotRecolectorPapeles1
+  robotPapeles2: robotRecolectorPapeles2
+  robotFlores1: robotRecolectorFlores1
+  robotFlores2: robotRecolectorFlores2
+comenzar 
+  AsignarArea(robotPapeles1, areaA1)
+  AsignarArea(robotPapeles2, areaA2)
+  AsignarArea(robotFlores1, areaB1)
+  AsignarArea(robotFlores2, areaB2)
+
+  Iniciar(robotPapeles1, 1, 1)
+  Iniciar(robotPapeles2, 11, 1)
+  Iniciar(robotFlores1, 1, 5)
+  Iniciar(robotFlores2, 11, 5)
+fin

@@ -1,0 +1,150 @@
+programa tp4punto4a
+procesos
+  proceso InformarID
+  comenzar
+    Informar(1)
+  fin
+
+  proceso IdentificarRobots
+  comenzar
+    EnviarMensaje(1,Robot1)
+    EnviarMensaje(2,Robot2)
+    EnviarMensaje(3,Robot3)
+    EnviarMensaje(4,Robot4)  
+  fin
+
+  proceso EncontrarUltimoRobot(E id:numero)
+  comenzar
+    si (id = 1)
+      Informar(1)
+    sino
+      si (id = 2)
+        Informar(2)
+      sino
+        si(id = 3)
+          Informar(3)
+        sino
+          si (id = 4)
+            Informar(4)
+  fin
+
+
+  proceso JuntarFlores
+  comenzar
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+  fin
+
+
+  proceso MoverFlor(E av:numero; E ca:numero)
+  comenzar
+    tomarFlor
+    BloquearEsquina(11,11)    
+    Pos(11,11)
+    LiberarEsquina(10,10)    
+    depositarFlor
+    Pos(av,ca)  
+    LiberarEsquina(11,11)
+  fin
+
+
+  proceso TrasladarFlor(ES tieneFlores:boolean)
+  variables
+    av,ca:numero
+  comenzar
+    av := PosAv
+    ca := PosCa
+    BloquearEsquina(10,10)
+    Pos(10,10)
+    si HayFlorEnLaEsquina
+      MoverFlor(av,ca)
+    sino
+      tieneFlores := F
+      Pos(av,ca)  
+      LiberarEsquina(10,10)  
+  fin
+
+
+  proceso RecolectarFlores
+  comenzar
+    Pos(11,11)    {Teniendo en cuenta que no se deben mover más flores después de esto}
+    JuntarFlores
+    Pos(1,1)
+  fin
+
+areas
+  esquina1: AreaPC(10,10,10,10)
+  esquina2: AreaC(11,11,11,11)
+  areaJefe: AreaP(1,1,1,1)
+
+  areaRobot1: AreaP(9,9,9,9)
+  areaRobot2: AreaP(9,10,9,10)
+  areaRobot3: AreaP(9,11,9,11)
+  areaRobot4: AreaP(9,12,9,12)
+
+
+robots
+  robot RobotTipo1
+  variables
+    id:numero
+    tieneFlores:boolean
+  comenzar
+    tieneFlores := V   {Identificar si tiene flores para mover}
+    
+    RecibirMensaje(id,RobotJefe)
+    
+    mientras tieneFlores
+      TrasladarFlor(tieneFlores)
+    EnviarMensaje(id,RobotJefe)  {Notifica al coordinador que terminó}
+      
+  fin
+
+
+  robot RobotJefe
+  variables
+    ID:numero
+    robotsFinalizados:numero
+  comenzar
+    IdentificarRobots
+    robotsFinalizados := 0
+    
+    repetir 4
+      RecibirMensaje(ID,*)
+      robotsFinalizados := robotsFinalizados + 1
+      EncontrarUltimoRobot(ID)
+    fin
+    
+    {Cuando todos los robots han terminado, recolectar flores}
+    RecolectarFlores
+  fin
+
+
+variables
+  Robot1,Robot2,Robot3,Robot4: RobotTipo1
+  RobotJefe:RobotJefe
+comenzar
+  AsignarArea(Robot1,esquina1)
+  AsignarArea(Robot1,esquina2)
+  AsignarArea(Robot1,areaRobot1)
+
+  AsignarArea(Robot2,esquina1)
+  AsignarArea(Robot2,esquina2)
+  AsignarArea(Robot2,areaRobot2)
+
+  AsignarArea(Robot3,esquina1)
+  AsignarArea(Robot3,esquina2)
+  AsignarArea(Robot3,areaRobot3)
+
+  AsignarArea(Robot4,esquina1)
+  AsignarArea(Robot4,esquina2)
+  AsignarArea(Robot4,areaRobot4)
+
+  AsignarArea(RobotJefe,areaJefe)
+  AsignarArea(RobotJefe,esquina2)
+  
+  Iniciar(Robot1,9,9)
+  Iniciar(Robot2,9,10)
+  Iniciar(Robot3,9,11)
+  Iniciar(Robot4,9,12)
+  Iniciar(RobotJefe,1,1)
+fin

@@ -1,0 +1,15 @@
+{Inciso e: ¿Cómo se puede implementar sin fiscalizador?
+Si eliminamos el fiscalizador, cada robot debe comunicar su resultado directamente a los demás, lo que implica un mayor número de mensajes.
+
+Preguntas clave:
+
+¿Cuántos robots participan?
+En el inciso c, hay 6 robots recolectores.
+¿Cuántos mensajes deben enviarse?
+Si cada robot debe compararse con los otros, podría usar una estrategia de comunicación distribuida.
+Por ejemplo, cada robot podría enviar su cantidad de flores a otro robot en la misma avenida o compartirlo en forma de árbol de comparación.
+Posibles estrategias:
+
+Estrategia de comparación en cadena: Cada robot envía su total al siguiente, y este mantiene el mayor hasta llegar al último, quien informa el resultado.
+Estrategia de comparación en árbol: Los robots se agrupan en pares y comparan sus flores, avanzando los ganadores hasta encontrar al mejor.
+Esto haría que el número de mensajes fuera del orden de log₂(6) ≈ 3 comparaciones en un esquema de árbol o 5 mensajes en una comparación lineal.}

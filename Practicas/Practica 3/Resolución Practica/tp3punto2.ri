@@ -1,0 +1,179 @@
+programa tp3punto2
+procesos
+  proceso juntar_Papeles(ES papel:numero)
+  comenzar
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      papel:= papel + 1
+  fin
+
+
+  proceso juntar_Flores(ES flor:numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      flor:= flor + 1
+  fin
+
+
+  proceso izquierda
+  comenzar
+    repetir 3
+      derecha
+  fin
+
+
+  proceso Escalon(ES objetos:numero; E tipo:numero)
+  variables
+    cant:numero  
+  comenzar
+    cant:= 5  
+    si (tipo = 1) entonces
+      juntar_Flores(objetos)
+    sino
+      juntar_Papeles(objetos)
+    fin
+
+    repetir 4      
+      repetir cant
+        mover
+      si (tipo = 1) entonces
+        juntar_Flores(objetos)  
+      sino
+        juntar_Papeles(objetos)  
+      fin
+      derecha
+
+      repetir cant
+        mover
+      si (tipo = 1) entonces
+        juntar_Flores(objetos)  
+      sino
+        juntar_Papeles(objetos)  
+      fin
+      izquierda    
+      cant:= cant - 1     
+  fin
+
+
+  proceso Escalon_Compartido(ES objetos:numero; E tipo:numero; E ID:numero)
+  comenzar
+    mover  
+    si (tipo = 1) entonces
+      juntar_Flores(objetos)
+    sino
+      juntar_Papeles(objetos)
+    fin
+    derecha
+    BloquearEsquina(16,16)   
+    mover
+    EnviarMensaje(ID,RJ)
+    si (tipo = 1) entonces
+      juntar_Flores(objetos)
+    sino
+      juntar_Papeles(objetos)
+    fin
+    repetir 2  
+      derecha
+    mover  
+    derecha
+    LiberarEsquina(16,16)
+  fin
+
+
+  proceso Escalon_Final(ES objetos:numero; E tipo:numero)
+  variables
+    cant:numero  
+  comenzar
+    cant:= 2   
+    repetir 4      
+      repetir cant
+        mover
+      si (tipo = 1) entonces
+        juntar_Flores(objetos)  
+      sino
+        juntar_Papeles(objetos)  
+      fin
+      izquierda
+      repetir cant
+        mover
+      si (tipo = 1) entonces
+        juntar_Flores(objetos)  
+      sino
+        juntar_Papeles(objetos)  
+      fin
+      derecha    
+      cant:= cant + 1     
+  fin
+
+
+  proceso Identificar_Robots
+  comenzar
+    EnviarMensaje(1,R1)
+    EnviarMensaje(2,R2)
+  fin
+
+
+areas
+  area_inicio: AreaP(1,1,1,1)
+  areaF: AreaP(1,2,15,30)
+  areaP: AreaP(17,1,31,30)
+  area_C: AreaPC(16,16,16,16)
+  areaJ: AreaP(15,1,15,1)    
+
+robots
+  robot TIPOF  {Robot que recoge flores}
+  variables
+    Flores:numero
+    ID:numero
+  comenzar
+    RecibirMensaje(ID,RJ)
+    Flores:=0
+    Escalon(Flores,1)
+    Escalon_Compartido(Flores,1,ID)
+    Escalon_Final(Flores,1)
+    Informar(Flores) 
+    EnviarMensaje(ID,RJ)
+  fin
+
+  robot TIPOP  {Robot que recoge papeles}
+  variables
+    Papeles:numero
+    ID:numero
+  comenzar
+    RecibirMensaje(ID,RJ)
+    Papeles:=0
+    Escalon(Papeles,2)
+    Escalon_Compartido(Papeles,2,ID)
+    Escalon_Final(Papeles,2)
+    Informar(Papeles) 
+    EnviarMensaje(ID,RJ)
+  fin
+
+  robot TIPOJ  {Robot Jefe que determina al ganador}
+  variables
+    ganador: numero
+    dato: numero
+  comenzar
+    Identificar_Robots
+    RecibirMensaje(dato,*)  
+    ganador:= dato
+    RecibirMensaje(dato,*)  
+    Informar('Ganador ',ganador)
+  fin
+
+variables
+  R1: TIPOF
+  R2: TIPOP
+  RJ: TIPOJ
+comenzar
+  AsignarArea(R1,area_inicio)
+  AsignarArea(R1,areaF)
+  AsignarArea(R1,area_C)
+  AsignarArea(R2,areaP)
+  AsignarArea(R2,area_C)
+  AsignarArea(RJ,areaJ)
+  Iniciar(R1,1,1)
+  Iniciar(R2,31,1)
+  Iniciar(RJ,15,1)
+fin

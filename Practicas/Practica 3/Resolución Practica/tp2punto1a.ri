@@ -1,0 +1,69 @@
+programa Etp2punto1a
+procesos
+  proceso recogerFlores (ES flores:numero)
+  comenzar
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      flores := flores + 1
+  fin    
+
+
+  proceso recorrerAvenida (ES flores: numero)
+  comenzar
+    repetir 9
+      recogerFlores(flores)
+      mover
+    recogerFlores(flores)
+  fin 
+
+
+areas
+  area1: AreaP(1,1,1,10)
+  area2: AreaP(2,11,2,20)
+
+
+robots 
+  robot robotCompetidor1
+  variables
+    floresRecogidas, floresCompetidor, diferenciaDeFlores: numero
+  comenzar
+    diferenciaDeFlores := 0
+    floresRecogidas := 0
+    floresCompetidor := 0
+    recorrerAvenida(floresRecogidas)
+
+    EnviarMensaje(floresRecogidas, robotCompetidor2)
+    RecibirMensaje(floresCompetidor, robotCompetidor2)
+
+    si (floresRecogidas > floresCompetidor) entonces
+      diferenciaDeFlores := floresRecogidas - floresCompetidor
+      Informar(diferenciaDeFlores)
+  fin
+  
+  robot robotCompetidor2
+  variables
+    floresRecogidas, floresCompetidor, diferenciaDeFlores: numero
+  comenzar
+    diferenciaDeFlores := 0
+    floresRecogidas := 0
+    floresCompetidor := 0
+    recorrerAvenida(floresRecogidas)
+    
+    EnviarMensaje(floresRecogidas, robotCompetidor1)
+    RecibirMensaje(floresCompetidor, robotCompetidor1)
+
+    si (floresRecogidas > floresCompetidor) entonces
+      diferenciaDeFlores := floresRecogidas - floresCompetidor
+      Informar(diferenciaDeFlores)
+  fin
+  
+
+variables 
+  robotCompetidor1: COMP1
+  robotCompetidor2: COMP2
+comenzar 
+  AsignarArea(robotCompetidor1, area1)
+  AsignarArea(robotCompetidor2, area2)
+  Iniciar(robotCompetidor1, 1, 1)
+  Iniciar(robotCompetidor2, 2, 11)
+fin

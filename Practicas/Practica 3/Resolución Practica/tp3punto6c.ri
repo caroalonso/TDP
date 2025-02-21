@@ -1,0 +1,126 @@
+programa tp3punto6c
+procesos
+  
+  proceso Identificar_Robots
+  comenzar
+    EnviarMensaje(1,R1)
+    EnviarMensaje(2,R2)
+    EnviarMensaje(3,R3)
+  fin
+
+  proceso Recorrer_Cuadrante(E id:numero; E ancho:numero; E alto:numero; ES recolectado_papeles:numero; ES recolectado_flores:numero)
+  variables
+    i,j: numero
+  comenzar
+    recolectado_papeles := 0
+    recolectado_flores := 0
+    
+    repetir alto
+      repetir ancho
+        si HayFlorEnLaEsquina
+          tomarFlor
+          recolectado_flores := recolectado_flores + 1
+        
+        si HayPapelEnLaEsquina
+          tomarPapel
+          recolectado_papeles := recolectado_papeles + 1
+        
+        si (j < ancho) 
+          mover
+      
+      si (i < alto) 
+        mover
+        repetir ancho
+          moverAtras
+  fin
+
+  proceso Depositar_Objetos(E id:numero; E calle_destino:numero; ES recolectado_papeles:numero; ES recolectado_flores:numero)
+  comenzar
+    Pos(calle_destino, 1)
+    mientras (recolectado_papeles > 0) o (recolectado_flores > 0)
+      si recolectado_flores > 0
+        depositarFlor
+        recolectado_flores := recolectado_flores - 1
+      
+      si recolectado_papeles > 0
+        depositarPapel
+        recolectado_papeles := recolectado_papeles - 1
+      
+      si PosCa < 100
+        mover
+  fin
+
+  proceso Esperar_Todos
+  variables
+    id, recolectado_papeles, recolectado_flores: numero
+  comenzar
+    repetir 3
+      RecibirMensaje(id, *)
+      RecibirMensaje(recolectado_papeles, *)
+      RecibirMensaje(recolectado_flores, *)
+      
+      si id = 1
+        EnviarMensaje(20, R1)
+      sino
+        si id = 2
+          EnviarMensaje(21, R2)
+        sino
+          si id = 3
+            EnviarMensaje(22, R3)
+  fin
+
+areas
+  areaR1: AreaP(2,2,7,7)
+  areaR2: AreaP(5,5,14,14)
+  areaR3: AreaP(9,9,15,15)
+  areaJ: AreaP(1,1,1,1)
+
+robots
+  robot RECOLECTOR
+  variables
+    id, ancho, alto, recolectado_papeles, recolectado_flores, calle_destino: numero
+  comenzar
+    RecibirMensaje(id, RJ)
+    
+    si id = 1
+      ancho := 6
+      alto := 6
+    sino
+      si id = 2
+        ancho := 10
+        alto := 10
+      sino
+        si id = 3
+          ancho := 7
+          alto := 7
+    
+    Recorrer_Cuadrante(id, ancho, alto, recolectado_papeles, recolectado_flores)
+    
+    EnviarMensaje(id, RJ)
+    EnviarMensaje(recolectado_papeles, RJ)
+    EnviarMensaje(recolectado_flores, RJ)
+    
+    RecibirMensaje(calle_destino, RJ)
+    Depositar_Objetos(id, calle_destino, recolectado_papeles, recolectado_flores)
+  fin
+  
+  robot FISCALIZADOR
+  comenzar
+    Identificar_Robots
+    Esperar_Todos
+  fin
+
+variables
+  R1, R2, R3: RECOLECTOR
+  RJ: FISCALIZADOR
+comenzar
+  AsignarArea(R1, areaR1)
+  AsignarArea(R2, areaR2)
+  AsignarArea(R3, areaR3)
+  AsignarArea(RJ, areaJ)
+  
+  Iniciar(R1,2,2)
+  Iniciar(R2,5,5)
+  Iniciar(R3,9,9)
+  Iniciar(RJ,1,1)
+fin

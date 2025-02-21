@@ -1,0 +1,72 @@
+programa tp2punto1b
+
+procesos
+  proceso recogerFlores (ES flores:numero)
+  comenzar
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      flores := flores + 1
+  fin    
+
+  proceso recorrerAvenida (ES flores: numero)
+  comenzar
+    repetir 9
+      recogerFlores(flores)
+      mover
+    recogerFlores(flores)
+  fin 
+
+areas
+  area1: AreaP(1,1,1,10)
+  area2: AreaP(2,11,2,20)
+  area3: AreaP(2,1,2,1)
+
+robots 
+  robot robotCompetidor1
+  variables
+    floresRecogidas: numero
+  comenzar
+    floresRecogidas := 0
+    recorrerAvenida(floresRecogidas)
+    EnviarMensaje(floresRecogidas, robotFiscal)
+  fin
+
+  robot robotCompetidor2
+  variables
+    floresRecogidas: numero
+  comenzar
+    floresRecogidas := 0
+    recorrerAvenida(floresRecogidas)
+    EnviarMensaje(floresRecogidas, robotFiscal)
+  fin
+
+  robot robotFiscal
+  variables
+    floresRobot1, floresRobot2: numero
+    diferenciaDeFlores: numero
+  comenzar
+    diferenciaDeFlores := 0
+    RecibirMensaje(floresRobot1, *)
+    RecibirMensaje(floresRobot2, *)
+
+    si (floresRobot1 > floresRobot2) entonces
+      diferenciaDeFlores := floresRobot1 - floresRobot2
+    sino
+      diferenciaDeFlores := floresRobot2 - floresRobot1
+    
+    Informar(diferenciaDeFlores)
+  fin
+
+variables 
+  robotCompetidor1: COMP
+  robotCompetidor2: COMP
+  robotFiscal: FISC
+comenzar 
+  AsignarArea(robotCompetidor1, area1)
+  AsignarArea(robotCompetidor2, area2)
+  AsignarArea(robotFiscal, area3)
+
+  Iniciar(robotCompetidor1, 1, 1)
+  Iniciar(robotCompetidor2, 2, 11)
+  Iniciar(robotFiscal, 2, 1)
+fin

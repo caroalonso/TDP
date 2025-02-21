@@ -1,0 +1,126 @@
+
+programa tp3punto1
+procesos
+  proceso juntarFlores (ES flor:numero)
+  comenzar
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      flor:= flor + 1
+  fin
+
+  proceso juntarPapeles (ES papel:numero)
+  comenzar
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+      papel:= papel + 1
+  fin
+
+  proceso OportunidadesF(ES flores:numero;E av:numero; E ca:numero)
+  variables
+    x,y:numero
+  comenzar
+    repetir 5  
+      Random(x,1,5)
+      Random(y,1,10)
+      BloquearEsquina(x,y)
+      Pos(x,y)
+      si (HayFlorEnLaEsquina)
+        juntarFlores(f)
+      Pos(av,ca)
+      LiberarEsquina(x,y)
+  fin
+
+  proceso Depositar_UnoPorUnoF(E flores:numero;E av:numero; E ca:numero)
+  comenzar
+    repetir flores
+      BloquearEsquina(10,10)
+      Pos(10,10)
+      depositarFlor
+      Pos(av,ca)
+      LiberarEsquina(10,10)
+  fin
+
+  proceso OportunidadesP(ES p:numero; E av:numero; E ca:numero)
+  variables
+    x,y:numero
+  comenzar
+    repetir 3 
+      Random(x,6,10)
+      Random(y,1,9)
+      BloquearEsquina(x,y)
+      Pos(x,y)
+      si (HayPapelEnLaEsquina)
+        juntarPapeles(p)
+      Pos(av,ca)
+      LiberarEsquina(x,y)
+  fin
+
+  proceso Depositar_UnoPorUnoP(E p:numero; E av:numero; E ca:numero)
+  comenzar
+    repetir p
+      BloquearEsquina(10,10)
+      Pos(10,10)
+      depositarPapel
+      Pos(av,ca)
+      LiberarEsquina(10,10)
+  fin
+
+areas
+  areaD: AreaC(10,10,10,10) 
+  
+  areaF: AreaPC(1,1,5,10)
+  areaP: AreaPC(6,1,10,9)
+
+  arearf1: AreaP(6,10,6,10)
+  areaRF2: AreaP(7,10,7,10)
+  arearp1: AreaP(8,10,8,10)
+  arearp2: AreaP(9,10,9,10)
+
+robots
+  robot tipo1
+  variables
+    f,av,ca,:numero
+  comenzar
+    f:=0
+    av:=PosAv
+    ca:=PosCa
+    OportunidadesF(f,av,ca)
+    Depositar_UnoPorUnoF(f,av,ca)
+  fin
+
+  robot tipo2
+  variables
+    p,av,ca:numero
+  comenzar
+    p:=0
+    av:=PosAv
+    ca:=PosCa
+    OportunidadesP(p,av,ca)
+    Depositar_UnoPorUnoP(p,av,ca)
+  fin
+
+variables
+  rf1,RF2: tipo1
+  rp1,rp2: tipo2
+comenzar
+  AsignarArea (rf1,areaF)
+  AsignarArea (rf1,arearf1)
+  AsignarArea (rf1,areaD)
+
+  AsignarArea (RF2,areaF)
+  AsignarArea (RF2,areaRF2)
+  AsignarArea (RF2,areaD)
+
+  AsignarArea (rp1,areaP)
+  AsignarArea (rp1,arearp1)
+  AsignarArea (rp1,areaD)
+
+  AsignarArea (rp2,areaP)
+  AsignarArea (rp2,arearp2)
+  AsignarArea (rp2,areaD)
+  
+  Iniciar (rf1,6,10)
+  Iniciar (RF2,7,10)
+  Iniciar (rp1,8,10)
+  Iniciar (rp2,9,10)
+fin

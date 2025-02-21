@@ -1,0 +1,17 @@
+{1️ Comparación de concurrencia entre ambas soluciones
+La primera versión (sin regreso a la esquina inicial) permite que los robots avancen continuamente sin 
+interrupciones, maximizando la concurrencia. Ambos robots pueden moverse sin bloqueos innecesarios, 
+salvo la pequeña espera en la esquina compartida (16,16).
+
+La segunda versión (con regreso a la esquina inicial para depositar la flor en (11,11)) 
+introduce interrupciones en el flujo del robot de las flores. Este debe:
+
+Detenerse en (10,10).
+Volver a la esquina inicial.
+Ir a (11,11) a dejar la flor.
+Regresar nuevamente a la esquina inicial antes de continuar.
+
+Conclusión:
+La primera versión es más concurrente porque ambos robots se mueven continuamente en la carrera sin interrupciones innecesarias.
+La segunda versión reduce la concurrencia porque el robot de las flores tiene pausas y desplazamientos adicionales.
+}

@@ -1,0 +1,148 @@
+
+procesos
+  proceso encontrarMaximo (ES max:numero; E floresRecolectadas:numero; ES ganador:numero; E idRobot:numero)
+  comenzar
+    si (floresRecolectadas > max)
+      max := floresRecolectadas
+      ganador := idRobot        
+  fin
+
+
+  proceso identificarRobots
+  comenzar
+    EnviarMensaje(1, r1)
+    EnviarMensaje(2, r2)
+    EnviarMensaje(3, r3)
+    EnviarMensaje(4, r4)  
+  fin
+
+
+  proceso enviarEsquina (E x:numero; E y:numero)
+  comenzar
+    EnviarMensaje(x, r1)
+    EnviarMensaje(y, r1)
+    
+    EnviarMensaje(x, r2)
+    EnviarMensaje(y, r2)
+    
+    EnviarMensaje(x, r3)
+    EnviarMensaje(y, r3)
+    
+    EnviarMensaje(x, r4)
+    EnviarMensaje(y, r4)
+  fin
+
+
+  proceso encontrarGanador (ES ganador:numero; E idRobot:numero)
+  variables
+    max, floresRecolectadas:numero
+  comenzar
+    max := -1
+    floresRecolectadas := 0
+    repetir 4 
+      RecibirMensaje(idRobot, *)
+      si (idRobot = 1)
+        RecibirMensaje(floresRecolectadas, r1)  
+      sino
+        si (idRobot = 2)
+          RecibirMensaje(floresRecolectadas, r2)
+        sino
+          si (idRobot = 3)
+            RecibirMensaje(floresRecolectadas, r3)
+          sino
+            si (idRobot = 4)
+              RecibirMensaje(floresRecolectadas, r4)
+
+      encontrarMaximo(max, floresRecolectadas, ganador, idRobot)
+  fin
+
+
+  proceso procesarEsquina(ES floresRecolectadas:numero; E x:numero; E y:numero)
+  variables
+    posX, posY:numero
+  comenzar
+    posX := PosAv
+    posY := PosCa   
+    BloquearEsquina(x, y)    
+    Pos(x, y)
+    floresRecolectadas := 0
+    
+    mientras (HayFlorEnLaEsquina)          
+      tomarFlor
+      floresRecolectadas := floresRecolectadas + 1 
+      Pos(posX, posY)
+      LiberarEsquina(x, y) 
+      BloquearEsquina(x, y)
+      Pos(x, y)
+      
+    Pos(posX, posY)  
+    LiberarEsquina(x, y)  
+  fin
+
+
+areas
+  areaGeneral: AreaPC(2, 2, 10, 10)  
+    
+  areaRobot1: AreaP(2, 1, 2, 1) 
+  areaRobot2: AreaP(3, 1, 3, 1)  
+  areaRobot3: AreaP(4, 1, 4, 1)
+  areaRobot4: AreaP(5, 1, 5, 1)
+    
+  arearj: AreaP(1, 1, 1, 1)  
+
+robots  
+  robot robotBase
+  variables
+    x, y:numero
+    idRobot:numero
+    floresRecolectadas:numero
+  comenzar        
+    RecibirMensaje(idRobot, arearj)
+    RecibirMensaje(x, arearj)
+    RecibirMensaje(y, arearj)
+    
+    procesarEsquina(floresRecolectadas, x, y)
+    
+    EnviarMensaje(idRobot, arearj)   
+    EnviarMensaje(floresRecolectadas, arearj)
+  fin
+
+  robot rj
+  variables
+    x, y:numero
+    ganador:numero
+    idRobot:numero
+  comenzar      
+    identificarRobots
+    
+    Random(x, 2, 10)
+    Random(y, 2, 10)
+
+    enviarEsquina(x, y)
+      
+    encontrarGanador(ganador, idRobot)  
+
+    Informar(ganador)         
+  fin
+
+variables 
+  r1, r2, r3, r4: robotBase
+  rj: rj
+comenzar 
+  AsignarArea(r1, areaGeneral)
+  AsignarArea(r2, areaGeneral)
+  AsignarArea(r3, areaGeneral)
+  AsignarArea(r4, areaGeneral)
+
+  AsignarArea(rj, arearj)  
+  AsignarArea(r1, areaRobot1)
+  AsignarArea(r2, areaRobot2)  
+  AsignarArea(r3, areaRobot3)
+  AsignarArea(r4, areaRobot4)
+  
+  Iniciar(r1, 2, 1)
+  Iniciar(r2, 3, 1)
+  Iniciar(r3, 4, 1)
+  Iniciar(r4, 5, 1)
+  Iniciar(rj, 1, 1)
+fin

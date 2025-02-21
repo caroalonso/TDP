@@ -1,0 +1,14 @@
+{Análisis:
+Cantidad de robots: Cada equipo tendría 4 robots (A1, A2, B1, B2) trabajando en segmentos de 20 esquinas. 
+Los robots A1 y B1 iniciarían en el primer segmento, y luego sus compañeros A2 y B2 continuarían con el 
+siguiente segmento de 20 esquinas, hasta completar 8 segmentos (160 esquinas en total por equipo).
+
+Cantidad de mensajes:
+Para cada equipo: Los robots A1 y B1 enviarían su resultado a A2 y B2 para cada uno de los 8 segmentos. Cada robot envía 1 mensaje por segmento, 
+por lo que se envían 8 mensajes por robot, resultando en un total de 16 mensajes por equipo (por 8 segmentos).
+
+Sin robot fiscalizador: Los robots simplemente sumarían los elementos recogidos sin necesidad de un mensaje adicional del fiscalizador.
+Implementación sin robot fiscalizador:
+Los robots A2 y B2, tras completar su recorrido de 160 esquinas, podrían simplemente sumar la cantidad de elementos recogidos 
+en su respectivo recorrido y reportar el total sin necesidad de coordinación adicional.
+}

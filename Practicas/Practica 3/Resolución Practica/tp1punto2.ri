@@ -1,0 +1,119 @@
+programa limpieza
+areas
+  lado1: AreaP(10,10,10,29)   
+  lado2: AreaP(10,30,29,30)   
+  lado3: AreaP(30,11,30,30)   
+  lado4: AreaP(11,10,30,10)   
+
+procesos
+  proceso recogerPapeles(ES pa:numero)
+  comenzar
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      pa := pa + 1
+    mover
+  fin
+
+
+robots
+  robot robot1
+  variables p:numero
+  comenzar
+    p := 0
+    repetir 19
+      recogerPapeles(p)
+    Informar(p)
+  fin
+
+
+  robot robot2
+  variables p:numero
+  comenzar
+    p := 0
+    derecha
+    repetir 19
+      recogerPapeles(p)
+    Informar(p)
+  fin
+
+  robot robot3
+  variables p:numero
+  comenzar
+    p := 0
+    repetir 2
+      derecha
+    repetir 19
+      recogerPapeles(p)
+    Informar(p)
+  fin
+
+
+  robot robot4
+  variables p:numero
+  comenzar
+    p := 0
+    repetir 3
+      derecha
+    repetir 19
+      recogerPapeles(p)
+    Informar(p)
+  fin
+
+variables
+  r1: robot1
+  r2: robot2
+  r3: robot3
+  r4: robot4
+
+comenzar
+  AsignarArea(r1, lado1)
+  AsignarArea(r2, lado2)
+  AsignarArea(r3, lado3)
+  AsignarArea(r4, lado4)
+
+  Iniciar(r1, 10,10)
+  Iniciar(r2, 10,30)
+  Iniciar(r3, 30,30)
+  Iniciar(r4, 30,10)
+fin
+
+
+  robot robot3
+  variables p:numero
+  comenzar
+    p := 0
+    repetir 2
+      derecha
+    repetir 19
+      recogerPapeles(p)
+    Informar(p)
+  fin
+
+  robot robot4
+  variables p:numero
+  comenzar
+    p := 0
+    repetir 3
+      derecha
+    repetir 19
+      recogerPapeles(p)
+    Informar(p)
+  fin
+
+variables
+  r1: robot1
+  r2: robot2
+  r3: robot3
+  r4: robot4
+
+comenzar
+  AsignarArea(r1, lado1)
+  AsignarArea(r2, lado2)
+  AsignarArea(r3, lado3)
+  AsignarArea(r4, lado4)
+
+  Iniciar(r1, 10,10)
+  Iniciar(r2, 10,30)
+  Iniciar(r3, 30,30)
+  Iniciar(r4, 30,10)
+fin
