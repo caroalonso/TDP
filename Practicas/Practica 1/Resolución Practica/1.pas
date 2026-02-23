@@ -1,126 +1,131 @@
-{1.El administrador de un edificio de oficinas cuenta en papel, con la información del pago de
+{
+1.El administrador de un edificio de oficinas cuenta con la información del pago de
 las expensas de dichas oficinas.
+
 Implementar un programa modularizado que:
-a. Genere un vector, sin orden, con a lo sumo las 300 oficinas que administra.
+
+a.Genere un vector de a lo sumo las 300 oficinas. 
 De cada oficina se ingresa:
-el código de identificación
-DNI del propietario 
-y valor de la expensa. 
-La lectura finaliza cuando se ingresa el código de identificación -1, el cual no se procesa.
-b. Ordene el vector, aplicando el método de inserción, por código de identificación de la oficina.
-c. Ordene el vector aplicando el método de selección, por código de identificación de la oficina.}
+cód de identificación
+DNI del propietario
+valor de expensa. 
 
-program punto1;
+*La lectura finaliza cuando se ingresa el cód -1, no debe procesarce.
+
+b.Ordene el vector, aplicando el método de INSERCION, por cód. de oficina.
+
+c.Ordene el vector aplicando el método de SELECCION , por cód de oficina.
+}
+
+program imperativo_uno;
 const
-  dimf=5;
+  dimF=300;
 type
-  rango=1..dimf;
-
-  ofi=record
+  rango=1..dimF;
+  
+  oficina=record
     cod:integer;
     dni:integer;
-    expensa:real;
+    valor:real;
   end;
+  
+  vector=array[rango]of oficina;
+  
+//------------------------------------
 
-  vector= array [rango]of ofi;
-
-//PROCESOS
-procedure leer_ofi(var datos:ofi);
+procedure leer_oficina(var ofi:oficina);
 begin
-  readln(datos.cod);
-  if(datos.cod <> -1)then begin
-    readln(datos.dni);
-    readln(datos.expensa);
+  writeln('Ingresar cod oficina (corta con cod -1) : ');
+  read(ofi.cod);
+  if(ofi.cod <> -1)then begin
+    writeln('ingresar dni unico:');
+    read(ofi.dni);
+    ofi.valor:=random(10)+1;
   end;  
 end;
 
-
-procedure cargar_vector(var v:vector ; var diml:integer);
+procedure cargar_vector(var v:vector; var diml:integer);
 var
-  info:ofi;
+ofi:oficina;
 begin
-  leer_ofi(info);
-  while (info.cod <> -1)and(diml<dimf)do begin
-    diml:=diml+1;
-    v[diml]:=info;
-    leer_ofi(info);
+   leer_oficina(ofi);
+   while(diml<dimF)and(ofi.cod <> -1)do begin
+     diml:=diml+1;
+     v[diml]:=ofi;
+     leer_oficina(ofi);
+   end;
+end;    
+   
+procedure imprimir_vector(v:vector; diml:integer);
+var
+i:integer;
+begin
+  for i := 1 to diml do begin
+    writeln('COD: ', v[i].cod);
+	writeln('DNI: ',v[i].dni);
+	writeln('VALOR: ',v[i].valor:2:2);
+	writeln('-------------');
   end;
-end;
+end;   
 
-
-procedure ordenar_seleccion (var v:vector; diml:integer); // ordenacion de seleccion
+procedure orden_insercion (var v:vector; diml:integer);
 var
-  i:integer;
-  j:integer;
-  pos:integer;
-  info :ofi;
+i,j:integer;
+actual:oficina;
 begin
-  for i := 1 to diml-1 do begin 
-    pos:= i;
-    for j:= i+1 to diml do 
-      if (v[j].cod < v[pos].cod)then 
-        pos:=j ; 
-      info:= v[pos]; 
-      v[pos]:= v[i];  
-      v[i]:= info;    
-  end;
-end;
-
-
-procedure ordenar_inserccion (var v :vector ; diml:integer); // por insercion
-var
-  i:integer;
-  j:integer;
-  actual:ofi;
-begin
-  for i := 2 to diml do begin 
-    actual:=v[i];  
-    j:=i-1;     
-    while (j>0) and (v[j].cod > actual.cod) do begin    
+  for i:= 2 to diml do begin
+    actual:=v[i];
+    j:= i-1;
+    while(j>0)and(actual.cod < v[j].cod)do begin // menor a mayor cod
       v[j+1]:=v[j];
       j:=j-1;
     end;
     v[j+1]:=actual;
-  end;              
+  end;  
 end;
 
 
-procedure imprimir_vector(v:vector; diml:integer);
+procedure orden_seleccion(var v:vector; diml:integer);
 var
-  i:integer;
+i,j,pos:integer;
+info:oficina;
 begin
-  writeln('---------------------- ');
-  for i := 1 to diml do begin
-    writeln('codigo: ',v[i].cod);
-    writeln('dni: ',v[i].dni);
-    writeln('expensas: ',v[i].expensas);
-  end;
-  writeln('-----------------------');
-end;  
+  for i:= 1 to diml-1 do begin
+    pos:=i;
+    
+    for j:= i+1 to diml do begin
+      if(v[j].cod < v[pos].cod)then // menor a mayor por cod
+        pos:=j
+    end;    
+    
+    //if(i <> pos)then begin       if opcional: si min ya no esta en la pos actual,intercambia.
+      info:=v[pos];
+      v[pos]:= v[i];
+      v[i]:=info;
+    //end;
+  end; 
+end;
 
-
-//PROGRAMA PRINCIPAL
+    
+  
 var
-  v:vector;
-  diml:integer;
-  num:integer;
+v:vector; 
+diml:integer; 
 begin
+  randomize;
   diml:=0;
-  cargar_vector(v,diml); //A
-  writeln('ingrese el numero 1 si quiere ordenar por seleccion o numero 2 si quiere ordenar por insercion: ');
-  readln(num);
-  if(num = 1)then begin
-    ordenar_seleccion(v,diml); //B
-  end
-  else begin
-    if(num = 2)then begin
-      ordenar_inserccion(v,diml);
-    end
-    else begin
-      writeln('No ingreso un numero valido, vuelva a intentar.');
-    end; 
-  end;  
-  if (num = 1) or (num = 2)then begin
-    imprimir_vector(v,diml);
-  end;  
+  cargar_vector(v,diml);
+  writeln;
+  writeln('VECTOR SIN ORDEN:');
+  writeln;
+  imprimir_vector(v,diml);
+  writeln;
+  writeln('VECTOR CON ORDEN DE INSERCION:');
+  orden_insercion(v,diml);
+  imprimir_vector(v,diml);
+  writeln;
+  writeln('VECTOR CON ORDEN DE SELECCION ORDEN:');
+  orden_seleccion(v,diml);
+  imprimir_vector(v,diml);
+  writeln;
 end.
