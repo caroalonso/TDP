@@ -60,9 +60,8 @@ procedure inicializar_vector_nil(var v:vector1);
 var
 i:integer;
 begin
-  for i:=1 to dimF do begin
+  for i:=1 to dimF do
     v[i]:=nil;
-  end;  
 end;
 
 //AGREGAR ATRAS EN LISTA
