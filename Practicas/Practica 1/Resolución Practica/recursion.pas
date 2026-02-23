@@ -1,144 +1,268 @@
-program RecursionMetodos;
+// POTENCIA DE UN NUMERO DE MANERA RECURSIVA
 
-// Calcula la potencia de un número de manera recursiva
-function potencia(x, n: integer): real;
+program CalculoDePotencia;
+
+Function potencia (x,n: integer): real;
 begin
-    if (n = 0) then
-        potencia := 1
-    else
-        potencia := x * potencia(x, n - 1);
+if (n = 0) then // caso base 
+  potencia:= 1
+else
+  potencia := x * potencia(x,n-1);
 end;
 
-// Encuentra el dígito máximo dentro de un número de manera recursiva
-procedure digitoMaximoRec(n: integer; var max: integer);
 var
-    dig: integer;
+ n,x : integer;
 begin
-    if (n <> 0) then
-    begin
-        dig := n mod 10;
-        if (dig > max) then
-            max := dig;
-        digitoMaximoRec(n div 10, max);
-    end;
-end;
+  writeln('ingrese un numero N :');
+  readln(n);
+  writeln('ingrese un numero X :');
+  readln(x);
+  writeln(potencia(x,n):2:2);
+end.
 
-// Imprime una lista en orden de manera recursiva
-procedure ImprimirEnOrden(l: lista);
-begin
-    if (l <> nil) then
-    begin
-        write(l^.datos, ' | ');
-        ImprimirEnOrden(l^.sig);
-    end;
-end;
+___________________________________________________________________________________________________________________
 
-// Imprime una lista en orden inverso de manera recursiva
-procedure ImprimirEnOrdenInverso(l: lista);
-begin
-    if (l <> nil) then
-    begin
-        ImprimirEnOrdenInverso(l^.sig);
-        write(l^.datos, ' | ');
-    end;
-end;
+// MAXIMO DENTRO DE UN NUMERO DE MANERA RECURSIVA
 
-// Encuentra el mínimo en una lista de manera recursiva
-function minimo(l: lista; min: integer): integer;
-begin
-    if (l = nil) then
-        minimo := min
-    else
-    begin
-        if (l^.elem.campo < min) then
-            min := l^.elem.campo;
-        minimo := minimo(l^.sig, min);
-    end;
-end;
+program CalculoDigitoMaximoRec;
 
-// Encuentra el máximo en una lista de manera recursiva
-function maximo(l: lista; max: integer): integer;
-begin
-    if (l = nil) then
-        maximo := max
-    else
-    begin
-        if (l^.elem.campo > max) then
-            max := l^.elem.campo;
-        maximo := maximo(l^.sig, max);
-    end;
-end;
+type 
 
-// Busca un elemento en una lista de manera recursiva
-function buscar(l: lista; x: integer): boolean;
-begin
-    if (l = nil) then
-        buscar := false
-    else if (l^.elem.campo = x) then
-        buscar := true
-    else
-        buscar := buscar(l^.sig, x);
-end;
+digito= -1..9; //un rango
 
-// Encuentra el mínimo en un vector de manera recursiva
-function Encontrar_Minimo(v: vector; min, pos, dimL: integer): integer;
-begin
-    if (pos > dimL) then
-        Encontrar_Minimo := min
-    else
-    begin
-        if (v[pos] < min) then
-            min := v[pos];
-        Encontrar_Minimo := Encontrar_Minimo(v, min, pos + 1, dimL);
-    end;
-end;
-
-// Encuentra el máximo en un vector de manera recursiva
-function Encontrar_Maximo(v: vector; max, pos, dimL: integer): integer;
-begin
-    if (pos > dimL) then
-        Encontrar_Maximo := max
-    else
-    begin
-        if (v[pos] > max) then
-            max := v[pos];
-        Encontrar_Maximo := Encontrar_Maximo(v, max, pos + 1, dimL);
-    end;
-end;
-
-// Calcula el promedio de los elementos de un vector de manera recursiva
-function Encontrar_Promedio(v: vector; total, pos, dimL: integer): real;
-begin
-    if (pos > dimL) then
-        Encontrar_Promedio := total / dimL
-    else
-        Encontrar_Promedio := Encontrar_Promedio(v, total + v[pos], pos + 1, dimL);
-end;
-
-// Suma los elementos de un vector de manera recursiva
-function suma(v: vector; pos, sumaTotal, dimL: integer): integer;
-begin
-    if (pos > dimL) then
-        suma := sumaTotal
-    else
-        suma := suma(v, pos + 1, sumaTotal + v[pos], dimL);
-end;
-
-// Búsqueda dicotómica en un vector de manera recursiva
-procedure buscarDicotomico(v: vector; ini, fin, dato: integer; var pos: integer);
+procedure digitoMaximoRec(n:integer; var max:digito);
 var
-    medio: integer;
+  dig:integer;
 begin
-    if (ini > fin) then
-        pos := -1
-    else
-    begin
-        medio := (ini + fin) div 2;
-        if (v[medio] = dato) then
-            pos := medio
-        else if (v[medio] < dato) then
-            buscarDicotomico(v, medio + 1, fin, dato, pos)
-        else
-            buscarDicotomico(v, ini, medio - 1, dato, pos);
-    end;
+  if (n <> 0) then begin           // n:5238
+    dig:= n mod 10;               //  dig: 8 - 3 - 2 - 5 
+    if (dig > max) then
+       max:=dig;
+    n:= n div 10;              // n:523 - 52 - 5 - 0
+    digitoMaximoRec(n, max);
+  end;
 end;
+
+var
+  num:integer;
+  max:digito;
+begin
+  read (num); //5238
+  max :=-1;
+  digitoMaximoRec(num,max);
+  write ('El digito maximo de ', num, ' es: ', max);
+  readln;
+end.
+
+____________________________________________________________________________________________________________________
+
+// IMPRIMIR LISTA EN ORDEN DE MANERA RECURSIVA
+
+Procedure ImprimirEnOrden(l:lista);    {en este caso agregar los elementos por atras de la lista}
+Begin
+    if (l <> nil) then begin
+        write(l^.datos,' | ');
+        ImprimirEnOrden(l^.sig);   //  ejemplo ingresa= 5 3 2 , imprime= 5,3,2
+    end;
+end; 
+
+____________________________________________________________________________________________________________________
+
+// IMPRIMIR LISTA EN ORDEN INVERSO RECURSIVA
+
+Procedure ImprimirEnOrdenInverso(l:lista);
+Begin
+    if (l <> nil) then begin
+        ImprimirEnOrdenInverso(l^.sig);  //  ejemplo ingresa= 5 3 2 , imprime= 2,3,5
+        write(l^.datos,' | ');
+    end;
+end; 
+
+___________________________________________________________________________________________________________________
+
+// RECURSION BUSCA ELEMENTO MINIMO (integer) EN UNA LISTA , FUNCION :
+
+function minimo (l:lista; min:integer):integer;  
+begin
+  if (l<>nil) then begin
+    if(l^.elem.campo < min) then
+      min:= l^.elem.campo; 
+
+    minimo:= minimo (l^.sig, min);
+  end
+  else 
+    minimo:=min;
+end; 
+
+______________________________________________________________________________________________________________________
+
+// RECURSION BUSCA ELEMENTO MAXIMO (integer) EN UNA LISTA , FUNCION :
+
+function maximo(l:lista; max:integer):integer;
+begin
+  if (l<>nil) then begin
+    if (l^.elem.campo > max) then
+      max:=l^.elem.campo;
+
+    maximo:= maximo(l^.sig, max);
+  end
+  else
+    maximo:=max;
+end;
+
+________________________________________________________________________________________________________________________
+  
+// BUSQUEDA RECURSIVA DE UN ELEMENTO EN UN CAMPO DE UNA LISTA:
+
+function buscar(l:lista; x:integer):boolean;
+begin
+  if(l=nil)then
+    buscar:=false
+  else
+    if(l^.elem.campo =x)then
+      buscar:=true
+    else
+      buscar:=buscar(l^.sig,x);      
+end;   
+
+____________________________________________________________________________________________________________________________
+
+
+// BUSQUEDA RECURSIVA DE UN MAXIMO DENTRO DE UN VECTOR.
+
+function Encontrar_Maximo(v:vector;diml:integer;max:integer; pos:integer):integer;
+begin
+  if (pos<=diml) then begin
+    if (v[pos].campo > max) then
+      max:=v[pos].campo;
+
+    Encontrar_Maximo:= Encontrar_Maximo(v, diml, max, pos+1);
+  end
+  else
+    Encontrar_Maximo:= max;
+end;
+
+//pp
+var
+  pos,max,aux: integer;
+begin
+  pos:= 1;
+  max:= -9999;  {valor chico inicial}
+  aux:= Encontrar_Maximo(v, diml, max, pos);
+  writeln('Numero maximo: ', aux);
+end;
+
+____________________________________________________________________________________________________________________________
+
+
+// BUSQUEDA RECURSIVA DE UN MINIMO DENTRO DE UN VECTOR
+
+function Encontrar_Minimo (v:vector;diml:integer;min:integer; pos:integer):integer;
+begin
+  if (pos <= diml) then begin
+    if (v[pos].campo < min) then
+      min:=v[pos].campo;
+
+    Encontrar_Minimo:=Encontrar_Minimo(v, diml, min, pos+1);
+  end
+  else
+    Encontrar_Minimo:= min;
+end;
+
+
+//pp
+var
+  pos,min,aux:integer;
+begin
+  pos:= 1;
+  min:= 9999;{valor grande inicial}
+  aux:=Encontrar_Minimo(v,diml,min,pos);
+  writeln('Numero minimo: ',aux);
+end;
+
+
+_____________________________________________________________________________________________________________________________
+
+// PROMEDIO RECURSIVO EN DE LOS ELEMENTOS DE UN VECTOR
+
+function suma(v:vector;pos:integer;dimL:integer):integer;
+begin
+  if(pos>dimL)then
+    suma := 0
+  else
+    suma:=v[pos] + suma(v,pos+1,dimL);
+end;
+
+
+//pp
+var
+  v:vector;
+  dimL:integer;
+  promedio:real;
+begin
+  dimL := 0;
+  {cargarVector(v,dimL); }  {suponemos que ya está cargado}
+  if(dimL <> 0)then
+    promedio:= suma(v,1,dimL) / dimL
+  else
+    promedio:= 0;
+  writeln('Promedio: ',promedio:0:2);
+end.
+
+
+___________________________________________________________________________________________________________________________________
+
+// SUMA RECURSIVA DE ELEMENTOS DE UN VECTOR
+
+function suma(v:vector;pos:integer;diml:integer):integer;
+begin
+  if(pos>diml)then
+    suma:= 0
+  else
+    suma:=v[pos] + suma(v,pos+1,diml);
+end;
+
+____________________________________________________________________________________________________________________________________
+
+//BUSQUEDA DICOTOMICA EN UN VECTOR ORDNEADO DE MANERA RECURSIVA CON PROCEDURE
+
+procedure buscar (v:v_vector; pri,ult:integer; dato:integer; var pos:integer);
+var
+  medio:integer;
+begin
+  if(pri>ult) then
+    pos := -1
+  else begin
+    medio := (pri + ult) DIV 2;
+
+    if(v[medio] = dato) then
+      pos := medio
+    else if (v[medio] < dato)then 
+      buscar(v,medio+1,ult,dato,pos)
+    else 
+      buscar(v,pri,medio-1,dato,pos);
+  end;
+end;
+
+
+//pp
+var
+  v:v_vector;
+  diml:integer;
+  pri,ult:integer;
+  dato:integer;
+  pos:integer;
+begin
+  {supongamos que el vector ya está cargado y ordenado}
+  pri:=1;
+  ult:=diml;
+
+  writeln('Ingrese dni a buscar: ');
+  readln(dato);
+  buscar(v, pri, ult, dato, pos);
+  if (pos <> -1) then
+    writeln('Se encontro en la posicion: ', pos)
+  else
+    writeln('No se encontro el elemento.');
+end.
+
