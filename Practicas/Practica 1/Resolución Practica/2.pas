@@ -1,174 +1,214 @@
-{2. Netflix ha publicado la lista de películas que estarán disponibles durante el mes de
-diciembre de 2021. 
-De cada película se conoce: 
-código de película, 
-código de género (1: acción, 2: aventura, 3: drama, 4: suspenso, 5: comedia, 6: bélica, 7: documental y 8: terror)
-y puntaje promedio otorgado por las críticas.
+{
+Netflix ha publicado la lista de películas que estarán disponibles durante el mes de
+diciembre de 2021.
 
-Implementar un programa modularizado que:
-a. Lea los datos de películas y los almacene por orden de llegada y agrupados por
-código de género, en una estructura de datos adecuada. La lectura finaliza cuando se lee
-el código de la película -1.
-b. Una vez almacenada la información, genere un vector que guarde, para cada
-género, el código de película con mayor puntaje obtenido entre todas las críticas.
-c. Ordene los elementos del vector generado en b) por puntaje utilizando alguno de
-los dos métodos vistos en la teoría.
-d. Luego de ordenar el vector, muestre el código de película con mayor puntaje y el
-código de película con menor puntaje.
+De cada película se conoce:
+-cód de película
+-cód de género (1:acción, 2: aventura, 3: drama, 4: suspenso, 5: comedia, 6: bélica, 7: documental y 8: terror)
+-puntaje promedio.
+
+Implementar modulos:
+
+a.Leer los datos de películas y los guardar por orden de llegada //agregar atras en las listas
+agrupados por cód de género, en una estructura de datos adecuada. // vector dimf= 8 de listas de peliculas 
+
+* La lectura finaliza cuando se lee el cód de la película -1.
+
+b.Una vez guardada la info, crear un vector que GUARDE PARA CADA GENERO, 
+el cód de película con mayor puntaje promedio. // crear vector de registro con: cod de peli y puntaje max promedio.
+
+c. ORDENE los elementos del VECTOR creado recientemente POR PUNTAJE PROMEDIO
+por seleccion o insercion.
+
+d. Luego de ordenar el vector, IMPRIMIR 
+cód de película con mayor puntaje 
+y cód de película con menor puntaje. // v[1] y v[dimF]
 }
 
-program punto2;
+program imperativo_dos;
 const
-  dimf=8;
+  dimF=8;
 type
-  rango=1..8;
-
-  pelis=record
+  rango= 1..dimF;
+  
+  pelicula=record
     cod:integer;
-    cod_genero:rango;
-    pun_promedio:real;
-  end;
-
-  info2=record
-    codigo:integer;
+    cod_genero:integer;
     puntaje:real;
-  end;  
-
-  lista=^nodo;
-
-  nodo=record
-    elem:pelis;
-    sig:lista;
   end;
+  
+  info_peli=record
+    cod:integer;
+    puntaje:real;
+  end;
+   
+  lista=^nodo;
+  
+  nodo=record
+    elem:pelicula;
+    sig:lista;
+  end;     
+  
+  vector1=array[rango]of lista;
+  
+  vector2=array[rango]of info_peli;  
 
-  vector2=array[rango]of info2;
+//--------------------------------------------------
 
-  vector=array[rango]of lista;
-
-//PEOCESOS
-procedure inicializar_vector_listas(var v:vector);
+//INICIALIZAR VECTOR DE LISTAS EN NIL
+procedure inicializar_vector_nil(var v:vector1);
 var
-  i:integer;
+i:integer;
 begin
-  for i:= 1 to dimf do begin
+  for i:=1 to dimF do begin
     v[i]:=nil;
   end;  
 end;
 
-
-procedure agregar_atras(var l:lista;p:pelis);
+//AGREGAR ATRAS EN LISTA
+procedure agregar_Atras(var l:lista; var ult:lista ; dato:pelicula);
 var
-  nue:lista;
-  ant:lista;
-  act:lista;
+nue:lista;
 begin
   new(nue);
-  nue^.elem:=p;
+  nue^.elem:=dato;
   nue^.sig:=nil;
-  ant:=l;
-  act:=l;
-  while (act <> nil) do begin
-    ant:=act;
-    act:= act^.sig
-  end;
-  if(ant=act)then begin
-    l:=nue;
-  end
-  else begin
-    ant^.sig:=nue;
-  end;
-  nue^.sig:=act;
+  
+  if(l=nil)then
+    l:=nue
+  else
+    ult^.sig:=nue;
+  ult:=nue;    
 end;
 
-
-procedure leer_pelis(var p:pelis);
+//LEER INFORMACION DE PELICULAS
+procedure leer_pelicula(var x:pelicula);
 begin
-  writeln('ingrese codigo de pelicula: ');
-  readln(p.cod);
-  if(p.cod <> -1)then begin
-    writeln('ingrese genero de pelicula: ');
-    readln(p.cod_genero);
-    writeln('ingrese puntaje promedio: ');
-    readln(p.pun_promedio);
-  end;
+  writeln('Ingresar cod de pelicula (corte cod -1): ');
+  read(x.cod);
+  writeln('Ingresar genero de pelicula (1 a 8): ');
+  read(x.cod_genero);
+  x.puntaje:=random * 9 + 1; // 1 a casi 10
 end;
 
-
-procedure cargar_info(var v:vector);
+//CREAR LISTA DE PELICULAS
+procedure cargar_vector_de_lista(var v:vector1);
 var
-  p:pelis;
+x:pelicula;
+ult:lista;
 begin
-  leer_pelis(p);
-  while(p.cod<>-1)do begin
-    agregar_atras(v[p.cod_genero],p); // se pasa la lista ya con la posicion y los datos de la peli.
-    leer_pelis(p);
-  end;
+  repeat
+   leer_pelicula(x);
+   agregar_Atras(v[x.cod_genero],ult,x);
+  until(x.cod = -1);
 end;
 
-
-procedure recorrer_cada_lista (l:lista; var max_puntaje:real; var cod:integer);
+//IMPRIMIR LISTA
+procedure imprimir_lista(l:lista);
 begin
-  while(l <> nil)do begin
-    if(l^.elem.pun_promedio > max_puntaje)then begin
-       max_puntaje:= l^.elem.pun_promedio;
-       cod:=l^.elem.cod;
-       l:=l^.sig;  
-    end;
+  if(l<>nil)then begin
+    writeln('COD PELI: ',l^.elem.cod);
+    writeln('COD GENERO: ',l^.elem.cod_genero);
+    writeln('PUNTAJE PROMEDIO: ',l^.elem.puntaje:2:2);
+    writeln('--------------');
+    imprimir_lista(l^.sig);
   end;
-end;
+end;  
 
-
-procedure cargar_vector2(v:vector; var v_2: vector2);
+//IMPRIME VECTOR DE LISTA 
+procedure imprimir_vector_listas(v:vector1);
 var
-  i:integer;
-  max_puntaje:real;
-  cod:integer;
+i:integer;
 begin
-  for i:=1 to dimf do begin
-    max_puntaje:=-1;
+  for i:= 1 to dimF do begin
+    writeln ('< PELICULAS DE GENERO: ',i,'>');
+    writeln;
+    if(v[i] <> nil)then // por si alguna de las listas de genero se encuentra vacia
+      imprimir_lista(v[i])
+  end;
+end;  
+
+//RECORRER LISTA RETORNAR ELEM MAX Y COD
+procedure recorrerLista(l:lista; var max:real; var cod:integer);
+begin
+  while(l<>nil)do begin
+    if(l^.elem.puntaje > max)then begin
+      max:=l^.elem.puntaje;
+      cod:=l^.elem.cod;
+    end; 
+    l:=l^.sig; 
+  end;
+end;
+
+//CARGAR NUEVO VECTOR
+procedure cargar_nuevo_vector(v1:vector1 ;var v2:vector2);
+var
+max:real;
+cod:integer;
+i:integer;
+begin
+  for i := 1 to dimF do begin
+    max:=-1;
     cod:=-1;
-    recorrer_cada_lista(v[i],max_puntaje,cod);
-    v_2[i].codigo:=cod;
-    v_2[i].puntaje:=max_puntaje;
+    recorrerLista(v1[i],max,cod);
+    v2[i].cod:=cod;
+    v2[i].puntaje:=max;
   end;  
 end;
 
-
-procedure ordenar_vector_promedios(var v :vector2);
+//IMPRIMIR VECTOR
+procedure imprimir_vector(v2:vector2);
 var
-  i:integer;
-  j:integer;
-  actual:info2; // tipo registro
- begin
-   for i := 2 to dimf do begin 
-     actual:=v[i];  
-     j:=i-1;     
-     while (j>0) and (v[j].puntaje > actual.puntaje) do begin    // pregunto por el puntaje del registro
-       v[j+1]:=v[j];
-       j:=j-1;
-     end;
-     v[j+1]:=actual;
-   end;              
- end;
-
-
-procedure imprimir(v:vector2);
+i:integer;
 begin
-  writeln('----------------');
-  writeln('codigo de pelicula con mejor promedio: ',v[1].codigo);
-  writeln('codigo de pelicula con mayor promedio: ',v[dimf].codigo);
-  writeln('----------------');
+  for i :=1 to dimF do begin
+   writeln('CATEGORIA: ',i,':');
+   writeln('MAX PUNTAJE: ',v2[i].puntaje:2:2);
+   writeln('COD PELI: ',v2[i].cod);
+   writeln('-------------');
+  end;
 end;
 
-
-//PROGRAMA PRINCIPAL
+//ORDEN DE VECTOR POR INSERCION , ORDEN POR PUNTAJE
+procedure orden_insercion(var v2:vector2);
 var
-  v:vector;
-  v_2:vector2;
+i,j:integer;
+actual:info_peli;
 begin
-   inicializar_vector_listas(v);
-   cargar_info(v);
-   cargar_vector2(v,v_2);
-   ordenar_vector_promedios(v_2);
-   imprimir(v_2);
+  for i := 2 to dimF do begin
+    actual:=v2[i];
+    j:=i-1;
+    while(j>0)and(v2[j].puntaje > actual.puntaje)do begin
+      v2[j+1]:=v2[j];
+      j:=j-1;
+    end;
+    v2[j+1]:=actual;
+  end;
+end;    
+    
+
+var
+v1:vector1;
+v2:vector2;
+begin
+  randomize;
+  writeln('INGRESAR COMO MINIMO UNA PELICLULA POR CADA GENERO PARA FUNCIONAMIENTO DE PROGRAMA.');
+  inicializar_vector_nil(v1);
+  cargar_vector_de_lista(v1);
+  writeln('<< LISTA DE PELICULAS >>');
+  writeln;
+  imprimir_vector_listas(v1);
+  cargar_nuevo_vector(v1,v2);
+  writeln('<< VECTOR DESORDENADO >>');
+  writeln;
+  imprimir_vector(v2);
+  orden_insercion(v2);
+  writeln('<< VECTOR ORDENADO POR PUNTAJE>>');
+  writeln;
+  imprimir_vector(v2);
+  writeln;
+  writeln('<<COD PELI CON MAYOR Y MENOR PUNTAJE:>>');
+  writeln;
+  writeln('COD PELI MIN:',v2[1].cod);
+  writeln('COD PELI MAX:',v2[dimF].cod);
 end.
