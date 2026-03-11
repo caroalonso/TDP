@@ -82,32 +82,30 @@ ________________________________________________________________________________
 
 // RECURSION BUSCA ELEMENTO MINIMO (integer) EN UNA LISTA , FUNCION :
 
-function minimo (l:lista; min:integer):integer;  
+function minimo(l:lista; min:integer):integer;
 begin
-  if (l<>nil) then begin
-    if(l^.elem.campo < min) then
-      min:= l^.elem.campo; 
-
-    minimo:= minimo (l^.sig, min);
-  end
-  else 
-    minimo:=min;
+ if(l=nil)then 
+   minimo:=min
+ else begin
+   if(l^.elem < min)then
+     min:=l^.elem;
+   minimo:= minimo(l^.sig,min);
+ end;   
 end; 
 
 ______________________________________________________________________________________________________________________
 
 // RECURSION BUSCA ELEMENTO MAXIMO (integer) EN UNA LISTA , FUNCION :
 
-function maximo(l:lista; max:integer):integer;
+function maximo(l:lista ; max:integer):integer;
 begin
-  if (l<>nil) then begin
-    if (l^.elem.campo > max) then
-      max:=l^.elem.campo;
-
-    maximo:= maximo(l^.sig, max);
-  end
-  else
-    maximo:=max;
+ if(l=nil)then
+    maximo:= max
+ else begin
+   if(l^.elem > max)then
+     max:=l^.elem;
+   maximo:= maximo(l^.sig,max);  
+ end;     
 end;
 
 ________________________________________________________________________________________________________________________
@@ -130,26 +128,26 @@ ________________________________________________________________________________
 
 // BUSQUEDA RECURSIVA DE UN MAXIMO DENTRO DE UN VECTOR.
 
-function Encontrar_Maximo(v:vector;diml:integer;max:integer; pos:integer):integer;
+function valor_maximo(v:vector; diml:integer; max:integer; pos:integer):integer;
 begin
-  if (pos<=diml) then begin
-    if (v[pos].campo > max) then
-      max:=v[pos].campo;
-
-    Encontrar_Maximo:= Encontrar_Maximo(v, diml, max, pos+1);
-  end
-  else
-    Encontrar_Maximo:= max;
+  if(pos<1)or(pos>diml)then
+    valor_maximo:=max
+  else begin  
+    if (v[pos]> max)then
+      max:=v[pos];
+    valor_maximo:= valor_maximo(v,diml,max,pos+1);
+  end;    
 end;
 
 //pp
 var
-  pos,max,aux: integer;
+  pos,max,diml:integer;
 begin
   pos:= 1;
-  max:= -9999;  {valor chico inicial}
-  aux:= Encontrar_Maximo(v, diml, max, pos);
-  writeln('Numero maximo: ', aux);
+  diml:=0;
+  max:= -9999;
+  carga_vector(v,diml);
+  writeln('Numero maximo: ', Encontrar_Maximo(v, diml, max, pos));
 end;
 
 ____________________________________________________________________________________________________________________________
@@ -157,29 +155,27 @@ ________________________________________________________________________________
 
 // BUSQUEDA RECURSIVA DE UN MINIMO DENTRO DE UN VECTOR
 
-function Encontrar_Minimo (v:vector;diml:integer;min:integer; pos:integer):integer;
+function valor_minimo(v:vector; diml:integer; min:integer; pos:integer):integer;
 begin
-  if (pos <= diml) then begin
-    if (v[pos].campo < min) then
-      min:=v[pos].campo;
-
-    Encontrar_Minimo:=Encontrar_Minimo(v, diml, min, pos+1);
-  end
-  else
-    Encontrar_Minimo:= min;
+  if(pos<1)or(pos>diml)then
+    valor_minimo:=min
+  else begin  
+    if (v[pos] < min)then
+      min:=v[pos];
+    valor_minimo:= valor_minimo(v,diml,min,pos+1);
+  end;    
 end;
-
 
 //pp
 var
-  pos,min,aux:integer;
+  pos,min,diml:integer;
 begin
   pos:= 1;
-  min:= 9999;{valor grande inicial}
-  aux:=Encontrar_Minimo(v,diml,min,pos);
-  writeln('Numero minimo: ',aux);
+  diml:=0;
+  min:=9999;
+  carga_vector(v,diml);
+  writeln('Numero minimo: ', Encontrar_Maximo(v, diml, min, pos));
 end;
-
 
 _____________________________________________________________________________________________________________________________
 
