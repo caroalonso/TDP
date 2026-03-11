@@ -1,122 +1,125 @@
-{4. Escribir un programa que:
-a. Implemente un módulo que genere una lista a partir de la lectura de números
-enteros. La lectura finaliza con el número -1.
-b. Implemente un módulo recursivo que devuelva el mínimo valor de la lista.
-c. Implemente un módulo recursivo que devuelva el máximo valor de la lista.
-d. Implemente un módulo recursivo que devuelva verdadero si un valor determinado
-se encuentra en la lista o falso en caso contrario.
+{Escribir un programa que:
+
+Implemente un módulo que genere una lista a partir de la lectura de números enteros. 
+La lectura finaliza con el número -1.
+
+Implemente un módulo recursivo que devuelva el mínimo valor de la lista.
+Implemente un módulo recursivo que devuelva el máximo valor de la lista.
+Implemente un módulo recursivo que devuelva verdadero si un valor determinado se encuentra en la lista 
+o falso en caso contrario
 }
 
-program punto4;
+program imperativo_cuatro;
 type
-  lista=^nodo;
-  nodo=record
-    elem:integer;
-    sig:lista;
-  end;
 
-//PROCESOS
-procedure agregar_nodo(var l:lista; num:integer);
+lista=^nodo;
+
+nodo=record
+ elem:integer;
+ sig:lista;
+end;
+
+//-------------------------
+
+
+//AGREGAR ATRAS EN UNA LISTA.
+procedure agregar_atras(var l:lista; var ult:lista ; num:integer);
 var
-  nue:lista;
+nue:lista;
 begin
   new(nue);
   nue^.elem:=num;
-  nue^.sig:=l;
-  l:=nue;
+  nue^.sig:=nil;
+  if(l=nil)then
+    l:=nue
+  else
+      ult^.sig:=nue;
+  ult:=nue;    
 end;
 
-
-procedure cargar_lista(var l :lista);
+//CREACION DE LISTA DE ENTEROS.
+procedure crear_lista_de_enteros (var l:lista);
 var
-  num:integer;
+ult:lista;
+num:integer;
 begin
-   writeln('ingrese un numero:');
-   read(num);
-   while(num <> -1 )do begin
-     agregar_nodo(l,num);
-     writeln('ingrese un numero:');
-     readln(num);
-   end;  
-end; 
-
-
-function maximo (l:lista; max:integer):integer;
-begin
-  if(l <> nil) then begin
-    if(l^.elem > max) then begin
-      max := l^.elem;
-    end;  
-    maximo := maximo(l^.sig,max);
-  end
-  else begin
-    maximo := max;
+  num:=random(11) - 1;
+  while(num <> -1)do begin
+    agregar_atras(l,ult,num);
+    num:=random(11) - 1;
   end;  
 end;
 
-
-function minimo (l:lista; min:integer):integer;
+//IMPRIMIR LISTA DE ENTEROS DE MANERA RECURSIVA.
+procedure imprimir_lista(l:lista);
 begin
-  if(l <> nil) then begin
-    if(l^.elem < min) then begin
-      min := l^.elem;
-    end;  
-    minimo := minimo (l^.sig,min);
-  end
-  else begin
-    minimo:= min;
+  if (l<> nil)then begin
+    write(l^.elem,' - ');
+    imprimir_lista(l^.sig);   
   end;  
 end;
 
-
-{function maximo (l:lista; var max:integer):integer; // otra forma de implementar que funciona tmb
+//OBTENER MAXIMO DE MANERA RECURSIVA EN UNA LISTA.
+function maximo(l:lista ; max:integer):integer;
 begin
-  if(l = nil) then begin // caso base .
-    maximo := max;
-  end
-  else begin
-    if(l^.elem > max) then begin
-      max := l^.elem;
-    end;  
-    maximo := maximo(l^.sig,max);
-  end;  
-end; }
-   
+ if(l=nil)then
+    maximo:= max
+ else begin
+   if(l^.elem > max)then
+     max:=l^.elem;
+   maximo:= maximo(l^.sig,max);  
+ end;     
+end;
 
-function buscar_elemento (l:lista; x:integer):boolean;
+//OBTENER MINIMO DE MANERA RECURSIVA EN UNA LISTA.
+function minimo(l:lista; min:integer):integer;
 begin
-  if(l=nil)then begin
-    buscar_elemento:=false;
-  end
+ if(l=nil)then 
+   minimo:=min
+ else begin
+   if(l^.elem < min)then
+     min:=l^.elem;
+   minimo:= minimo(l^.sig,min);
+ end;   
+end;
+
+////OBTENER VERDADERO O FALSO SI EXISTE ELEMENTO EN LA LISTA DE MANERA RECURSIVA.
+function seEncuentra(l:lista; valor:integer):boolean;
+begin
+  if(l=nil)then
+    seEncuentra:=false
   else begin
-    if(l^.elem=x)then begin
-      buscar_elemento:=true;
-    end
-    else begin
-      buscar_elemento:=buscar_elemento(l^.sig,x) ;
-    end;
+    if(l^.elem=valor)then  
+       seEncuentra:=true
+    else   
+    seEncuentra:=seEncuentra(l^.sig,valor)
   end;     
 end;
 
+//--------------------------
 
-//PROGRAMA PRINCIPAL
 var
-  l:lista;
-  min:integer;
-  max:integer;
-  x:integer;
+max:integer;
+min:integer;
+l:lista;
+valor:integer;
 begin
-  randomize; // para que no se repitan dos veces al ejecutar el mismo numero.
-  l:=nil;
-  min:=9999;
-  max:=-9999;
-  cargar_lista(l); //A
-  writeln('el valor minimo de la lista es : ', minimo(l,min)); //B
-  writeln('el valor maximo de la lista es : ', maximo(l,max)); //C
-  x:=random(1000); // genera un numero random de 1 a 999
-  if(buscar_elemento(l,x))then begin //D
-    writeln('se encontro el elemento ',x,' en la lista.');
-  end
+randomize;
+l:=nil;
+min:=9999;
+max:=-1;
+valor:=random(10)+1;
+crear_lista_de_enteros(l);
+writeln('<< LISTA DE ENTEROS: >>');
+imprimir_lista(l);
+writeln();
+writeln('El numero max: ', maximo(l,max));
+writeln('El numero min:',minimo(l,min));
+if(seEncuentra(l,valor))then
+  writeln('El valor: ',valor,' se encuentra en la lista')
+else
+  writeln('El valor: ',valor,' no se encuentra en la lista')
+end.
   else begin
     writeln('no se encontro el numero ',x,' en la lista.');
   end; 
