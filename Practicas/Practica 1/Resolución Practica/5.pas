@@ -1,66 +1,83 @@
-{5. Escribir un programa que:
+{ Escribir un programa que:
 a. Implemente un módulo que genere un vector de 20 números enteros.
 b. Implemente un módulo recursivo que devuelva el máximo valor del vector.
 c. Implementar un módulo recursivo que devuelva la suma de los valores contenidos
-en el vector.}
+en el vector}
 
-program punto5;
+program imperativo_cinco;
 const
-dimf=20; 
-
+ dimF=20;
+ 
 type
-  rango= 1..dimf;
+  rango=1..dimF;
   vector=array[rango]of integer;
 
-//PROCESOS
-procedure cargar_vector_total (var v:vector);
+//-------------------------
+
+//CARGAR VECTOR
+procedure cargar_vector(var v:vector; var diml:integer);
 var
-  i:integer;
+valor:integer;
 begin
-  for i := 1 to dimf do begin //carga hasta el final del vector 
-    writeln('ingrese un numero: ');
-    readln (v[i]);
-  end;
+   valor:=random(9)+1;
+   while(diml<dimF)do begin
+     diml:=diml+1;
+     v[diml]:=valor;
+     valor:=random(9)+1;
+   end;  
 end;
 
-
-function maximo (v:vector; max:integer;pos:integer):integer;
+//IMPRIMIR VECTOR 
+procedure imprimir_vector(v:vector;diml:integer);
+var
+i:integer;
 begin
-  if(pos < 1)or(pos > dimf) then begin // caso base cuando pos sea menor a uno o mayor a dimencion fisica. 
-    maximo := max;
-  end
-  else begin
-    if(v[pos] > max) then begin
-      max := v[pos];
-    end;  
-    maximo := maximo(v,max,(pos+1));
-  end; 
-end;
-
-
-function sumador (v:vector;suma:integer;pos:integer):integer;
-begin
-  if(pos < 1)or(pos > dimf)then begin
-    sumador:= suma;
-  end 
-  else begin
-    suma:=suma+v[pos];
-    sumador:= sumador (v,suma,(pos+1));  
+  for i := 1 to diml do begin
+    write(v[i],' - ');
   end;  
 end;
 
-
-//PROGRAMA PRINCIPAL
-var
-  v:vector;
-  max:integer;
-  pos:integer;
-  suma:integer;
+//VALOR MAXIMO DE VECTOR DE MANERA RECURSIVA.
+function valor_maximo(v:vector; diml:integer; max:integer; pos:integer):integer;
 begin
-  suma:=0;
-  pos:=1;
-  max:=-9999;
-  cargar_vector_total(v);
-  writeln('elemento maximo del vector: ', maximo(v,max,pos));
-  writeln('suma de los elementos del vector: ',sumador(v,suma,pos));
+  if(pos<1)or(pos>diml)then
+    valor_maximo:=max
+  else begin  
+    if (v[pos]> max)then
+      max:=v[pos];
+    valor_maximo:= valor_maximo(v,diml,max,pos+1);
+  end;    
+end;
+
+//SUMA DE VALORES DE TODO EL VECTOR DE MANETA RECURSIVA.
+function sumaTotal(v:vector; diml:integer; suma:integer; pos:integer):integer;
+begin
+  if(pos<1)or(pos>diml)then 
+    sumaTotal:=suma
+  else begin
+    suma:=suma+v[pos];
+    sumaTotal:= sumaTotal(v,diml,suma,pos+1);
+  end;  
+end;
+
+//--------------------------------------
+
+var
+v:vector;
+diml:integer;
+max:integer;
+pos:integer;
+suma:integer;
+begin
+randomize;
+suma:=0;
+diml:=0;
+max:=-1;
+pos:=1;
+cargar_vector(v,diml);
+writeln('<<VECTOR:>>');
+imprimir_vector(v,diml);
+writeln;
+writeln('valor max: ', valor_maximo(v,diml,max,pos));
+writeln('suma total: ', sumaTotal(v,diml,suma,pos));
 end.
