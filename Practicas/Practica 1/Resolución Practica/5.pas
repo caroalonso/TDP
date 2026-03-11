@@ -10,6 +10,7 @@ const
  
 type
   rango=1..dimF;
+
   vector=array[rango]of integer;
 
 //-------------------------
@@ -37,6 +38,7 @@ begin
   end;  
 end;
 
+
 //VALOR MAXIMO DE VECTOR DE MANERA RECURSIVA.
 function valor_maximo(v:vector; diml:integer; max:integer; pos:integer):integer;
 begin
@@ -50,14 +52,12 @@ begin
 end;
 
 //SUMA DE VALORES DE TODO EL VECTOR DE MANETA RECURSIVA.
-function sumaTotal(v:vector; diml:integer; suma:integer; pos:integer):integer;
+function sumaTotal(v:vector; diml:integer; pos:integer):integer;
 begin
   if(pos<1)or(pos>diml)then 
-    sumaTotal:=suma
-  else begin
-    suma:=suma+v[pos];
-    sumaTotal:= sumaTotal(v,diml,suma,pos+1);
-  end;  
+    sumaTotal:=0
+  else 
+    sumaTotal:= v[pos]+ sumaTotal(v,diml,pos+1)
 end;
 
 //--------------------------------------
@@ -67,10 +67,8 @@ v:vector;
 diml:integer;
 max:integer;
 pos:integer;
-suma:integer;
 begin
 randomize;
-suma:=0;
 diml:=0;
 max:=-1;
 pos:=1;
@@ -79,5 +77,6 @@ writeln('<<VECTOR:>>');
 imprimir_vector(v,diml);
 writeln;
 writeln('valor max: ', valor_maximo(v,diml,max,pos));
-writeln('suma total: ', sumaTotal(v,diml,suma,pos));
+writeln('suma total: ', sumaTotal(v,diml,pos));
 end.
+
