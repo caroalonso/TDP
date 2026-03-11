@@ -11,7 +11,6 @@ debe mostrar: 10111.
 
 program punto7;
 
-//PROCESOS
 procedure binario (num:integer);
 begin
   if (num <> 0) then begin
@@ -20,17 +19,17 @@ begin
   end;
 end;    
 
+//-----------------------------
 
-//PROGRAMA PRINCIPAL
 var
   num:integer;
 begin
-  writeln('ingrese un numero para convertir a binario :');
+  writeln('ingrese un numero para convertir a binario <corte con valor 0 >:');
   read(num);
   while (num <> 0)do begin
     binario(num);
     writeln('');
-    writeln('ingrese un numero :');
+    writeln('ingrese un numero <corte con valor 0 > :');
     read(num);
   end;  
 end.
