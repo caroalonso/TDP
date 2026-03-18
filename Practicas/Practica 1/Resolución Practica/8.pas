@@ -51,26 +51,24 @@ end;
 //NUMERO MAXIMO DEL ARBOL.
 function numMax(a:arbol):integer;
 begin
-  if(a=nil)then //ab vacio
+  if (a=nil) then //ab vacio
     numMax:= 9999
-  else 
-    if(a^.HD=nil)then //si mi hijo derecho es nil yo soy el max del arbol.
-      numMax:=a^.elem
-    else
-      numMax:= numMax(a^.HD); //si no sigo bajando por mi hijo derecho.    
+  else if (a^.HD=nil) then //si mi hijo derecho es nil yo soy el max del arbol.
+    numMax:=a^.elem
+  else
+    numMax:= numMax(a^.HD); //si no sigo bajando por mi hijo derecho.    
 end;
 
 
 //NUMERO MINIMO DEL ARBOL DE MANERA RECURSIVA.
-function numMin(a:arbol):integer;
+function numMin(a: arbol): integer;
 begin
-  if(a=nil)then //ab vacio
-    numMin:=-1
+  if (a = nil) then
+    numMin := -1
+  else if (a^.HI = nil) then     // Si no tengo hijo izquierdo, soy el mínimo
+    numMin := a^.elem
   else
-    if(a^.HI=nil)then //si mi hijo izquiero es nil yo soy el min del arbol.
-      numMin:=a^.elem
-    else
-      numMin:= numMin(a^.HI); //si no sigo bajando por mi hijo izquierdo.      
+    numMin := numMin(a^.HI);   // Sigo bajando por la izquierda
 end;
 
 
