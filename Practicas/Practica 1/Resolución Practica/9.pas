@@ -78,6 +78,8 @@ begin
     nombreExistente:= nombreExistente(a^.HD, nombre);
 end;
 
+//-------------------------------
+
 var
 a:arbol;
 begin
