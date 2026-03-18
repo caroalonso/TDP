@@ -1,90 +1,90 @@
-{9. Implemente un programa que invoque a un módulo que genere un árbol binario de
-búsqueda con nombres de personas que se leen desde teclado. La lectura finaliza con el
-nombre ‘ZZZ’ que no debe procesarse. También debe invocar a otro módulo que reciba el
-árbol generado y un nombre, y retorne verdadero si existe dicho nombre en el árbol o falso
-en caso contrario.}
+{
+9.Implemente un programa que invoque a un módulo que genere un árbol con nombres de personas que se leen desde teclado. 
+La lectura finaliza con el nombre ‘ZZZ’ que no debe procesarse. 
+También debe un módulo que reciba el árbol generado y un nombre, y retorne 
+verdadero si existe o falso en caso contrario.
+}
 
-program punto9;
+program imperativo_nueve;
 type
-   str=string[30];
 
-   arbol=^nodo;
-   nodo=record
-    elem:str;
-    HD:arbol;  //hijo derecho
-    HI:arbol;  //hijo izquierdo
-  end;  
+arbol=^nodo;
 
-//PROCESOS
-Procedure crear_arbol (var a:arbol; nombre:str); // No se cargan elementos repetidos
+nodo=record
+  elem:String[4];
+  sig:arbol;
+  HI:arbol;
+  HD:arbol;
+end;
+
+//-------------------------------
+
+//CREAR ARBOL CON ELEMENTOS REPETIDOS.
+procedure crear_arbol(var a:arbol; nombre:String);
 begin
-  if (a=nil)then begin  //caso base
+  if(a=nil)then begin
     new(a);
-    a^.elem:= nombre;      // crear el primer nodo del arbol
-    a^.HD:=nil;
+    a^.elem:=nombre;
     a^.HI:=nil;
+    a^.HD:=nil;
   end
-  else begin 
-    if (nombre < a^.elem)then begin  // siguientes nodos, rama izquierda (menor).
-      crear_arbol (a^.HI,nombre);     // manda nodo izq y dato (recursion)
-    end
-    else begin                   // siguientes nodos, rama derecha (mayor)
-      if(nombre > a^.elem)then begin   
-        crear_arbol (a^.HD,nombre);   // siguientes nodos, der y dato (recursion)
-      end;  
-    end;
+  else begin
+    if(nombre < a^.elem)then
+      crear_arbol(a^.HI,nombre)
+    else //no evita nombres repetidos.
+      crear_arbol(a^.HD,nombre);
   end;
 end;
 
-
-procedure leer_info(var a:arbol);
-var
-  nom:str;
+//LEEO INFORMACION.
+procedure leer_info(var nombre:String);
 begin
-  writeln('ingrese un nombre:');
-  readln(nom);                //SIEMPRE QUE LEA UN STRING USAR READLN , PARA QUE NO TOME EL ENTER
-  while (nom <>'zzz')do begin
-    crear_arbol(a,nom);
-    writeln('ingrese un nombre:');
-    readln(nom);
-  end;
+  writeln('ingrese 3 letras <<corte de carga letras ZZZ>> :');
+  readln(nombre);
+end;
+
+//CARGAR INFORMACION EN EL ARBOL.
+procedure crear_arbol(var a:arbol);
+var
+nombre:String;
+begin
+   leer_info(nombre);
+   while(nombre <> 'ZZZ')do begin
+      crear_arbol(a,nombre);
+      leer_info(nombre);
+   end;   
 end;  
 
-
-function buscar(a:arbol; nombre:str):boolean;            
+//PRUEBA PARA VER ARBOL FINAL CREADO.
+procedure enOrden(a:arbol);
 begin
-  If (a=nil) then begin
-    buscar:= false;             // caso base 1 el arbol se encuntra vacio.
-  end  
-  else begin
-    If (nombre=a^.elem) then begin
-      buscar:= true;                 // caso base 2 encuentra elemento
-    end
-    else begin
-      If (nombre < a^.elem) then begin
-        buscar:= buscar(a^.HI,nombre);
-      end  
-      else begin
-        buscar:= buscar(a^.HD,nombre);
-      end;  
-    end;      
+  if(a<>nil)then begin
+    enOrden(a^.HI);
+    write(a^.elem ,' - ');
+    enOrden(a^.HD);
   end;
 end;
 
-
-//PROGRAMA PRINCIPAL
-var
-  nom:str;
-  a:arbol;
+//(BUSQUEDA ORDENADA) VERIFICACION DE NOMBRE EXISTENTE EN EL ARBOL 
+function nombreExistente(a: arbol; nombre: String): boolean;
 begin
-  a:=nil;
-  leer_info(a);
-  writeln('ingrese un nombre por teclado:');
-  readln(nom);
-  if( buscar(a,nom) )then begin
-    writeln('el nombre',nom,'si existe.');
-  end
-  else begin
-      writeln('el nombre ingresado no existe.');
-  end;
+  if(a=nil)then
+    nombreExistente:= false
+  else if(a^.elem=nombre)then
+    nombreExistente:= true
+  else if(nombre<a^.elem)then
+    nombreExistente:= nombreExistente(a^.HI, nombre)
+  else
+    nombreExistente:= nombreExistente(a^.HD, nombre);
+end;
+
+var
+a:arbol;
+begin
+a:=nil;
+crear_arbol(a);
+writeln('<<prueba de muestra arbol cargado>>');
+enOrden(a); 
+writeln;
+writeln('Nombre existente : ', nombreExistente(a,'car'));
 end.
