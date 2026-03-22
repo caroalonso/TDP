@@ -1,184 +1,194 @@
-{14.Unab aberolíneab dispone de un árbol binabrio de búsquedab con lab informabción de sus
-empleabdos. 
-De cabdab empleado se conoce: 
-Número de legabjo, 
-Dni,
-Cabtegoríab (1..20) 
-y abño de ingreso ab lab empresab. 
-El árbol se encuentrab ordenabdo por número de legabjo. 
-Se solicitab:
-ab. Implementabr un módulo que recibab el árbol de empleabdos, número de legabjo “ab”,
-número de legabjo “B” y un número de cabtegoríab, y retorne un vector ordenabdo por
-número de legabjo. 
-El vector debe contener el número de legabjo y Dni de abquellos
-empleabdos cuyo número de legabjo se encuentrab comprendido entre los números de
-legabjo recibidos (“ab” y “B”, siendo “ab” menor que “B”) y lab cabtegoríab se correspondab con
-lab recibidab por pabrámetro. Por normab de lab empresab, cabdab cabtegoríab puede contabr con
-ab lo sumo 250 empleabdos.
-b. Implementabr un módulo recursivo que recibab lab informabción generabdab en “b” y retorne
-el promedio de los números de Dni.}
+{
+Una aerolínea DISPONE de un árbol binario de búsqueda con la información de sus
+empleados. 
+De cada empleado se conoce: 
+* Número de legajo // criterio de orden del arbol
+* Dni
+* Categoría (1..20) 
+* y año de ingreso a la empresa. 
+Nota: El árbol se encuentra ordenado por número de legajo. 
 
+Se solicita:
+a. Implementar un módulo que reciba:
+* el árbol de empleados
+* número de legajo “A”
+* número de legajo “B” 
+* número de categoría
 
-program tp1punto14;
+y retorne un vector ordenado por número de legajo. 
+El vector debe contener: 
+* número de legajo 
+* Dni 
+
+de los empleados cuyo número de legajo se encuentra comprendido entre los números de legajo recibidos (“A” y “B”, siendo “A” menor que “B”) 
+y la categoría se corresponda con la recibida por parámetro. 
+
+Por norma de la empresa, cada categoría puede contar con a lo sumo 250 empleados. //DimF vector.
+
+b. Implementar un módulo recursivo que reciba la información generada en “a” y retorne
+el promedio de los números de Dni.
+}
+
+program imperativo_catorce;
 const
-    cant = 20;
-    dimf = 250;
+  dimF=250;
 type
-    cat = 1..cant;
-    empleado = record
-      legajo:integer;
-      dni:integer;
-      categoria:cat;
-      ingreso:integer;
-    end;
-
-    Type
-    arbol = ^nodo;
-    nodo = record
-      elem:empleado;
-      HI:arbol;
-      HD:arbol;
-    end;
-
-    vector = array [1..dimf] of empleado;
-
-
-//PROCESOS
-procedure leer_empleado(var e:empleado);
-begin
-  writeln('ingrese numero de legajo: (la carga corta con el legajo numero 0)');
-  readln(e.legajo);
-  e.dni:=random(10); //genero un dni random 
-  e.categoria:=3; //forzada categoria a 3 para probar
-  e.ingreso:=2000+random(30); //limito ingreso random
-end;
-
-
-Procedure crear_arbol (var ab:arbol; e:empleado);
-Begin
-if ( ab=nil) then begin
-  new(ab);
-  ab^.elem:= e; 
-  ab^.HI:= nil; 
-  ab^.HD:= nil;
-end
-else
-  if (e.legajo < ab^.elem.legajo) then 
-    crear_arbol(ab^.HI,e)
-  else 
-    crear_arbol(ab^.HD,e)   
-end;
-
-
-procedure cargar(var ab:arbol);
-var
-  e:empleado;
-begin
-  leer_empleado(e);
-  while (e.legajo <> 0) do begin
-    crear_arbol(ab,e);
-    leer_empleado(e);
+  categoria=1..20;
+  
+  empleado=record
+    legajo:integer;
+    dni:integer;
+    cat:categoria;
+    anio:integer;
+  end;  
+  
+  arbol=^nodo;
+  
+  nodo=record
+    elem:empleado;
+    HI:arbol;
+    HD:arbol;
   end;
-end;
+  
+  empleado2=record
+    legajo:integer;
+    dni:integer;
+  end; 
+  
+  vector=array[1..dimF] of empleado2;
+  
+  
+//----------------------------------------
 
 
-Procedure enOrden ( ab:arbol );
-begin 
-  if ( ab<>nil ) then begin
-    enOrden (ab^.HI);
-    write (ab^.elem.legajo,'-');
-    enOrden (ab^.HD);
-  end;
-end;
-
-
-//la busqueda se hace en preOrden para que el nuevo vector se pueda generar de forma ordenada 
-procedure busqueda_entre_dos(var v: vector; var diml: integer; ab: arbol; inf, sup, cate: integer);    
+//(PRUEBA) LECTURA DE ARBOL EN ORDEN CRECIENTE
+procedure inOrden(a:arbol);
 begin
-  if (ab <> nil) then begin
-    if (ab^.elem.legajo >= inf) then
-      busqueda_entre_dos(v, diml, ab^.HI, inf, sup, cate); // Buscabr primero en HI
-    
-    if (ab^.elem.legajo >= inf) and (ab^.elem.legajo <= sup) and (ab^.elem.categoria = cate) then begin
-      diml := diml + 1;
-      v[diml] := ab^.elem;
-    end;
-
-    if (ab^.elem.legajo <= sup) then
-      busqueda_entre_dos(v, diml, ab^.HD, inf, sup, cate); // Luego buscabr en HD
-  end;
-end;
-
-
-procedure imprimir_vector(v:vector; diml:Integer);
-var
-  i:integer;
-begin
-  for i:=1 to diml do begin
+  if(a<>nil)then begin
+    inOrden(a^.HI);
+    writeln('Legajo: ',a^.elem.legajo);
+    writeln('Categoria: ',a^.elem.cat);
     writeln;
-    writeln('legajo: ',v[i].legajo);
-    writeln('dni: ',v[i].dni);
-    writeln('categoria: ',v[i].categoria);
-    writeln('ingreso: ',v[i].ingreso);
-  end;
-end;
-
-
-procedure calcular_promedio(var total:integer ; var cantidad:Integer; v:vector; diml:integer);
-begin
-  if (diml <> 0) then begin
-    total:= total + v[diml].dni;
-    cantidad:=cantidad + 1;
-    calcular_promedio(total,cantidad,v,diml-1);
+    inOrden(a^.HD);
   end;  
 end;
 
 
-procedure calcular_dni_promedio(var dni_promedio:integer; v:vector; diml:integer);
-var
-  total:integer;
-  cantidad:integer;
+//YA SE DISPONE (PRUEBA) - CREACION ARBOL SIN REPETIDOS
+procedure crear_arbol(var a:arbol ; e:empleado);
 begin
-  total:=0;
-  cantidad:=0;
-  calcular_promedio(total,cantidad,v,diml);
-  if (cantidad > 0) then
-    dni_promedio:=total div cantidad
-  else
-    dni_promedio:=0;
+  if(a=nil)then begin
+    new(a);
+    a^.elem:=e;
+    a^.HI:=nil;
+    a^.HD:=nil;
+  end
+  else if(a^.elem.legajo < e.legajo)then 
+     crear_arbol(a^.HD,e)
+  else if(a^.elem.legajo > e.legajo)then 
+    crear_arbol(a^.HI,e)
 end;
 
 
-//PROGRAMA PRINCIPAL
-var
-  ab:arbol;
-  v:vector;
-  diml:integer;
-  dni_promedio:integer;
-  A:integer;
-  B:integer;
-  cate:integer;
+//YA SE DISPONE (PRUEBA) - LEECTURA DE CARGA ARBOL
+procedure leer_info (var e:empleado);
 begin
-  ab:=nil;
-  randomize;
-  cargar(ab);// Se dispone, cargo empleados en el arbol.
-  writeln;
-  writeln ('empleados cargados al arbol de manera ordenada por legajo:');
-  enOrden(ab); 
-  writeln;
-  diml:=0;
-  A:=3;
-  B:=23;
-  cate:=3; //forza categoria para prueba
-  busqueda_entre_dos(v,diml,ab,A,B,cate); //ab 
-  writeln;
-  writeln('nuevo vector generado con legajos entre ' ,A ,' y ' ,B, ' con categoria ',cate,' :');
-  imprimir_vector(v,diml);
-  dni_promedio:=0;
-  calcular_dni_promedio(dni_promedio,v,diml); //B  
-  writeln;
-  writeln('El dni promedio es: ',dni_promedio);
-  writeln;
-end.
+  writeln('Ingrese num legajo: (corte de carga con legajo 0)');
+  readln(e.legajo);
+  if(e.legajo <> 0)then begin
+    writeln('Ingrese categoria: (1..20)');
+    readln(e.cat);
+    e.anio:=2000+random(21); // año de 2000 a 2020.
+    e.dni:=random(999)+1; 
+  end;
+end;
 
+
+//YA SE DISPONE (PRUEBA) - CARGA DE ARBOL
+procedure cargar_arbol(var a:arbol);
+var
+emp:empleado;
+begin
+   leer_info(emp);
+   while(emp.legajo<>0)do begin
+     crear_arbol(a,emp);
+     leer_info(emp);
+   end;  
+end;  
+
+
+procedure cargar_vector(var v:vector; var diml:integer; e:empleado);
+var
+emp:empleado2;
+begin
+  if(diml < dimF)then begin
+    emp.legajo:= e.legajo;
+    emp.dni:= e.dni;
+    diml:=diml+1;
+    v[diml]:=emp;
+  end;  
+end;
+
+
+procedure modulo_A(a:arbol; var v:vector; var diml:integer; inf:integer; sup:integer ; cat:integer);
+begin
+  if(a<>nil)then begin
+    if(a^.elem.legajo > inf)then 
+       modulo_A(a^.HI,v,diml,inf,sup,cat);
+    if(a^.elem.legajo >=inf) and (a^.elem.legajo <=sup) and (a^.elem.cat = cat)then 
+      cargar_vector(v,diml,a^.elem);
+    if(a^.elem.legajo < sup)then
+      modulo_A(a^.HD,v,diml,inf,sup,cat);     
+  end;
+end;
+
+
+//YA SE DISPONE (PRUEBA) - LEECTURA DE CARGA VECTOR DE MANERA RECURSIVA
+procedure leer_vector(v:vector; diml:integer; pos:integer);
+begin
+  if(pos<=diml)then begin
+    writeln('Legajo: ', v[pos].legajo);
+    writeln('Dni: ', v[pos].dni);
+    writeln;
+    leer_vector(v,diml,pos+1);
+  end;  
+end;
+
+
+function sumaDNI(v:vector; diml:integer; pos:integer):real;
+begin
+  if(pos<=diml)then 
+    sumaDNI:= v[pos].dni + sumaDNI(v,diml,pos+1)
+  else
+    sumaDNI:=0   
+end;
+
+
+function modulo_B(v:vector; diml:integer):real;
+begin
+  if(diml=0)then
+    modulo_b:=0    
+  else 
+    modulo_B:= sumaDNI(v,diml,1) /diml
+end;
+
+//-------------------
+
+var
+a:arbol; // YA SE DISPONE (PRUEBA) 
+v:vector;
+diml:integer;
+begin
+randomize;
+a:=nil;  // YA SE DISPONE (PRUEBA) 
+diml:=0;
+cargar_arbol(a);  // YA SE DISPONE (PRUEBA) 
+writeln('<< ARBOL CARGADO ORDENADO POR NUMERO DE LEGAJO: >>'); // (PRUEBA) 
+inOrden(a); // (PRUEBA) 
+modulo_A(a,v,diml,5,15,8); // A:5 B:15 categoria:8
+writeln('<< VECTOR CARGADO ORDENADO POR NUMERO DE LEGAJO: >>');  //(PRUEBA) 
+leer_vector(v,diml,1);   // (PRUEBA) 
+writeln('<< PROMEDIO DNI: >>');
+writeln(modulo_B(v,diml):0:2);
+end.
 
